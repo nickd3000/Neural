@@ -58,7 +58,7 @@ public class NeuralNet {
 	Node [] nodes;
 	double [] targetValues;
 	
-	int numConnections = 0;
+	public int numConnections = 0;
 	int numNodes = 0;
 	int numLayers = 0;
 	ArrayList <Integer> layerSizes = new ArrayList<>();

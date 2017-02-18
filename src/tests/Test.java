@@ -46,10 +46,10 @@ public class Test {
 	
 	public static void testSin() {
 		BasicDisplay display = new BasicDisplay(400, 600);
-		BasicGraph graphError = new BasicGraph(2000);
+		BasicGraph graphError = new BasicGraph(20000);
 		NeuralNet net = new NeuralNet();
-		net.buildNet("1 8 8 1");
-		
+		net.buildNet("1 2 2 1");
+		net.randomiseAllWeights(-2, 2);
 		net.learningRate = 0.0015;
 		net.momentum = 0.65;
 		
@@ -86,8 +86,15 @@ public class Test {
 				}
 				net.drawNetwork(display, 30, 200, 500, 300);
 				graphError.addData(error/300.0);
-				graphError.draw(display, 20, 450, 350, 100, Color.gray);
+				//graphError.draw(display, 20, 450, 350, 100, Color.gray);
+				graphError.draw(display, 20, 450-200, 350, 100+200, Color.gray);
 				display.refresh();
+				
+				for (int j=0; j<net.numConnections; j++) {
+					int w = 200+(int)(net.getWeight(j)*25.0);
+					graphError.addData(w/30.0);
+					display.fillRect((int)(w), 120+j, 2, 2, Color.BLUE);
+				}
 				
 				System.out.println("Iterations:" + i + " \tError: " + error/300.0);
 				//net.learningRate = Math.abs(error)/300.0;
@@ -98,9 +105,9 @@ public class Test {
 	public static double function(double x) {
 		//return (x-1)/5;
 		//return Math.tanh(x);
-		double val = (Math.sin(x*1)*0.4 + (Math.sin(x*2)*0.4) + (Math.sin(x*5)*0.2));
+		double val = (Math.sin(x*1)*0.4 + (Math.sin(x*2)*0.4));//+ (Math.sin(x*5)*0.2));
 		//return (Math.cos(x)*0.5)+0.5;
-		if (val<0) val=-0.5;
+		//if (val<0) val=-0.5;
 		//if (val>0) val=0.5;
 		return val;
 	}
