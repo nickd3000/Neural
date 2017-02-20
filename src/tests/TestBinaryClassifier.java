@@ -23,7 +23,7 @@ public class TestBinaryClassifier {
 	DataPoint [] data = new DataPoint[numPoints]; 
 	NeuralNet net = new NeuralNet();
 	
-	BasicDisplay display = new BasicDisplay(800, 450);
+	BasicDisplay display = new BasicDisplay(800, 600);
 	
 	
 	
@@ -33,7 +33,7 @@ public class TestBinaryClassifier {
 
 		BasicGraph graphError = new BasicGraph(2000);
 
-		net.buildNet("2 15 15 1");
+		net.buildNet("2 5 5 5 1");
 		net.learningRate=0.00013;
 		net.momentum=0.45;
 		initData(Shape.BLOBS);
@@ -81,19 +81,22 @@ public class TestBinaryClassifier {
 					
 			graphError.addData(error*10.0);
 
-			display.cls(Color.gray);
-			for (int n=0;n<15;n++) {
-				display.drawText("W"+n+" "+net.getWeight(n), 460, 210+(n*13), Color.BLACK);
-			}
+			display.cls(new Color(100,200,100));
+			display.setDrawColor(Color.BLACK);
+			//for (int n=0;n<15;n++) {
+			//	display.drawText("W"+n+" "+net.getWeight(n), 460, 210+(n*13));
+			//}
 			
-			graphError.draw(display, 450, 50, 320, 340, Color.yellow);
+			graphError.draw(display, 10, 420, 400, 120, Color.yellow);
 			
-			drawMatrix(10, 30, 200);
-			drawPoints(10, 30, 200);
-			net.drawNetwork(display, 460, 50, 200, 200);
-			display.drawText("Iteration  "+i, 40, 400, Color.WHITE);
-			display.drawText("Error  "+error, 40, 415, Color.WHITE);
-			display.drawText("Learning rate  "+net.learningRate, 40, 430, Color.WHITE);
+			drawMatrix(10, 10, 200);
+			drawPoints(10, 10, 200);
+			net.drawNetwork(display, 430, 10, 300, 300);
+			
+			display.setDrawColor(Color.WHITE);
+			display.drawText("Iteration  "+i, 10, 555);
+			display.drawText("Error  "+error, 10, 570);
+			display.drawText("Learning rate  "+net.learningRate, 10, 585);
 	
 			display.refresh();
 		}
@@ -160,7 +163,8 @@ public class TestBinaryClassifier {
 			if (v<-0.8) c = colDataPointOff;
 			else if (v>0.8) c = colDataPointOn;
 			else c = Color.lightGray;
-			display.drawCircle(x+xo, y+yo, 5, c);
+			display.setDrawColor(c);
+			display.drawCircle(x+xo, y+yo, 5);
 		}
 	}
 	
@@ -185,7 +189,8 @@ public class TestBinaryClassifier {
 				//display.drawCircle(x, y, 5, c);
 				int dx = (int)((x + 100) * drawScale);
 				int dy = (int)((y + 100) * drawScale);
-				display.fillRect(dx+xo,dy+yo,(int)(step*drawScale),(int)(step*drawScale), c);
+				display.setDrawColor(c);
+				display.drawFilledRect(dx+xo,dy+yo,(int)(step*drawScale),(int)(step*drawScale));
 			}
 		}
 	}

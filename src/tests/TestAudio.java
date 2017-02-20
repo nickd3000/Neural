@@ -61,15 +61,16 @@ public class TestAudio {
 			graphError.draw(display, 10, 100, 200,10, Color.green);
 			graphInput.draw(display, 10, 50, 200,100, Color.white);
 			graphOutput.draw(display, 10, 50, 200,100, Color.black);
-			display.drawText("Iteration  "+i, 40, 40, Color.WHITE);
-			display.drawText("Error  "+error, 40, 65, Color.WHITE);
+			display.setDrawColor(Color.WHITE);
+			display.drawText("Iteration  "+i, 40, 40);
+			display.drawText("Error  "+error, 40, 65);
 			
 			
-			if (true || display.getMousePosition()!=null) {
+			//if (true || display.getMousePosition()!=null) {
 				//generate();
 				//generateAutoencoder();
 				//graphGenerated.draw(display, 10, 100, 200,50, Color.orange);
-			}
+			//}
 			
 			display.refresh();
 			

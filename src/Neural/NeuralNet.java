@@ -496,9 +496,12 @@ public class NeuralNet {
 	}
 	
 	public void drawNetwork(BasicDisplay g, int xo, int yo, int width, int height) {
-		int xdiff=80;
-		int ydiff=30;
-
+		int xdiff=width;
+		int ydiff=height;
+		
+		//g.setDrawColor(Color.black);
+		//g.drawRect(xo,yo,xo+width,yo+height);
+		
 		for (int i=0;i<numConnections;i++) {
 			int id1 = links[i].sourceNodeId;
 			int id2 = links[i].targetNodeId;
@@ -506,13 +509,27 @@ public class NeuralNet {
 			int y1 = yo+getNodeY(nodes[id1].layerId,nodes[id1].nodeSequence,xdiff,ydiff);
 			int x2 = xo+getNodeX(nodes[id2].layerId,nodes[id2].nodeSequence,xdiff,ydiff);
 			int y2 = yo+getNodeY(nodes[id2].layerId,nodes[id2].nodeSequence,xdiff,ydiff);
-			g.drawLine(x1, y1, x2, y2, getColorForValue(links[i].weight));
+			//g.setDrawColor(getColorForValue(links[i].weight));
+			//g.drawLine(x1, y1, x2, y2);
+			drawWeight(g,x1,y1,x2,y2,links[i].weight);
 		}
 		for (int i=0;i<numNodes;i++) {
 			int nx = xo+getNodeX(nodes[i].layerId,nodes[i].nodeSequence,xdiff,ydiff);
 			int ny = yo+getNodeY(nodes[i].layerId,nodes[i].nodeSequence,xdiff,ydiff);
-			g.drawCircle(nx, ny, 20, getColorForValue(nodes[i].value));
+			g.setDrawColor(getColorForValue(nodes[i].value));
+			g.drawFilledCircle(nx, ny, 10);
 		}
+	}
+	public void drawWeight(BasicDisplay g,int x1,int y1, int x2, int y2, double weight) {
+		g.setDrawColor(getColorForValue(weight));
+		g.drawLine(x1, y1, x2, y2);
+		if (weight<-1) weight=-1;
+		if (weight>1) weight=1;
+		double p = (weight + 1.0f)/2.0f;
+		g.drawFilledRect(
+				x1+(int)((double)(x2-x1)*p)-2,
+				y1+(int)((double)(y2-y1)*p)-2,4,4);
+		
 	}
 	public Color getColorForValue(double val) {
 		
@@ -526,10 +543,15 @@ public class NeuralNet {
 		return col;
 	}
 	public int getNodeX(int layerId, int nodeSequence, int xdiff, int ydiff) {
-		return layerId*xdiff;
+		
+		return (int)(((float)xdiff / (float)(numLayers-1)) * (float)layerId);
+		
+		//return layerId*xdiff;
 	}
 	public int getNodeY(int layerId, int nodeSequence, int xdiff, int ydiff) {
-		return nodeSequence*ydiff;
+		int numNodesInLayer = layerSizes.get(layerId);
+		return (int)(((float)ydiff / (float)(numNodesInLayer-1)) * (float)nodeSequence);
+		//return nodeSequence*ydiff;
 	}
 	
 	// Used for experimentation.
