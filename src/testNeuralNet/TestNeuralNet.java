@@ -1,4 +1,4 @@
-package tests;
+package testNeuralNet;
 
 import Neural.NeuralNet;
 import ToolBox.BasicDisplay;
@@ -6,7 +6,7 @@ import ToolBox.BasicGraph;
 
 import java.awt.*;
 
-public class Test {
+public class TestNeuralNet {
 
 	public static void main(String[] args) {
 		//testBasic();
@@ -48,10 +48,11 @@ public class Test {
 		BasicDisplay display = new BasicDisplay(640, 480);
 		BasicGraph graphError = new BasicGraph(20000);
 		NeuralNet net = new NeuralNet();
-		net.buildNet("1 8 1");
+		net.buildNet("1 2 1");
 		net.randomiseAllWeights(-2, 2);
 		net.learningRate = 0.0015;
 		net.momentum = 0.65;
+		display.startTimer();
 		
 		for (int i=0;i<50000000;i++) {
 			for (int e=0;e<10;e++) {
@@ -66,8 +67,13 @@ public class Test {
 			net.applyWeightDeltas(); 
 				
 			//System.out.println("Out1:" + net.getOutput(0) + " Out2:" + net.getOutput(1));
+			
 
-			if (every(i,100)) {
+			//if (every(i,100)) {
+			if (display.getEllapsedTime()>1000/30)
+			{
+				display.startTimer();
+				
 				net.run();
 				display.cls(Color.ORANGE);
 				int y=0;
@@ -90,8 +96,8 @@ public class Test {
 				net.drawNetwork(display, 330, 20, 300, 200);
 				graphError.addData(error/300.0);
 				//graphError.draw(display, 20, 450, 350, 100, Color.gray);
-				graphError.draw(display, 20, 200, 300, 200, Color.gray);
-				display.refresh();
+				graphError.draw(display, 20, 170, 300, 300, Color.gray);
+				
 				
 				for (int j=0; j<net.numConnections; j++) {
 					int w = 200+(int)(net.getWeight(j)*25.0);
@@ -100,7 +106,8 @@ public class Test {
 					display.drawFilledRect((int)(w), 120+j, 2, 2);
 				}
 				
-				System.out.println("Iterations:" + i + " \tError: " + error/300.0);
+				//System.out.println("Iterations:" + i + " \tError: " + error/300.0);
+				display.refresh();
 				//net.learningRate = Math.abs(error)/300.0;
 			}
 		}

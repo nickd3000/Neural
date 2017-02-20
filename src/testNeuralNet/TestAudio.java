@@ -1,4 +1,4 @@
-package tests;
+package testNeuralNet;
 
 import Neural.NeuralNet;
 import ToolBox.BasicDisplay;

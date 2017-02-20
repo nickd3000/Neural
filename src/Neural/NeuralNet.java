@@ -517,12 +517,11 @@ public class NeuralNet {
 			int nx = xo+getNodeX(nodes[i].layerId,nodes[i].nodeSequence,xdiff,ydiff);
 			int ny = yo+getNodeY(nodes[i].layerId,nodes[i].nodeSequence,xdiff,ydiff);
 			g.setDrawColor(getColorForValue(nodes[i].value));
-			g.drawFilledCircle(nx, ny, 10);
+			//g.drawFilledCircle(nx, ny, 10);
 		}
 	}
 	public void drawWeight(BasicDisplay g,int x1,int y1, int x2, int y2, double weight) {
-		g.setDrawColor(getColorForValue(weight));
-		g.drawLine(x1, y1, x2, y2);
+		g.setDrawColor(Color.BLACK);
 		if (weight<-1) weight=-1;
 		if (weight>1) weight=1;
 		double p = (weight + 1.0f)/2.0f;
@@ -530,6 +529,8 @@ public class NeuralNet {
 				x1+(int)((double)(x2-x1)*p)-2,
 				y1+(int)((double)(y2-y1)*p)-2,4,4);
 		
+		g.setDrawColor(getColorForValue(weight));
+		g.drawLine(x1, y1, x2, y2);
 	}
 	public Color getColorForValue(double val) {
 		
