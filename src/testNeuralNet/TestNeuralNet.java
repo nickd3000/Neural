@@ -10,7 +10,7 @@ public class TestNeuralNet {
 
 	public static void main(String[] args) {
 		//testBasic();
-		testSin();
+		//testSin();
 		//testMapping();
 		
 		//TestBinaryClassifier testBC = new TestBinaryClassifier();
@@ -18,6 +18,9 @@ public class TestNeuralNet {
 		
 		//TestAudio testAudio = new TestAudio();
 		//testAudio.run();
+		
+		TestRecurrent testRecurrent = new TestRecurrent();
+		testRecurrent.run();
 	}
 
 	public static void testMapping() {
@@ -48,7 +51,7 @@ public class TestNeuralNet {
 		BasicDisplay display = new BasicDisplay(640, 480);
 		BasicGraph graphError = new BasicGraph(20000);
 		NeuralNet net = new NeuralNet();
-		net.buildNet("1 2 1");
+		net.buildNet("1 4 1");
 		net.randomiseAllWeights(-2, 2);
 		net.learningRate = 0.0015;
 		net.momentum = 0.65;

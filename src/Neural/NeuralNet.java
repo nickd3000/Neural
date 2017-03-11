@@ -15,6 +15,8 @@ import java.util.function.DoubleUnaryOperator;
 // http://www.cse.unsw.edu.au/~cs9417ml/MLP2/
 // http://www.doc.ic.ac.uk/~sgc/teaching/pre2012/v231/lecture13.html
 
+// TODO: Saving and loading networks.
+
 class Link {
 	int layerId;
 	int sourceNodeId;
@@ -161,7 +163,7 @@ public class NeuralNet {
 					links[linkId].sourceNodeId = thisNodeId+nodeOffsets.get(layerId);
 					links[linkId].targetNodeId = nextNodeId+nodeOffsets.get(layerId+1);
 					
-					System.out.println("linkId:"+linkId+" layer:"+layerId+" src:"+links[linkId].sourceNodeId+" dst:"+links[linkId].targetNodeId);
+					//System.out.println("linkId:"+linkId+" layer:"+layerId+" src:"+links[linkId].sourceNodeId+" dst:"+links[linkId].targetNodeId);
 					
 					linkId++;
 				}
@@ -249,7 +251,11 @@ public class NeuralNet {
 		return unmapValue(nodes[offset+i].value,min,max);
 	}
 	
-
+	
+	public double getInnerValue(int layer, int i, double min, double max) {
+		int offset = nodeOffsets.get(layer);
+		return unmapValue(nodes[offset+i].value,min,max);
+	}
 	
 	// temp name
 	public void run () {
