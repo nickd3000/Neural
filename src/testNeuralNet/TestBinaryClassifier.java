@@ -33,10 +33,10 @@ public class TestBinaryClassifier {
 
 		BasicGraph graphError = new BasicGraph(2000);
 
-		net.buildNet("2 5 5 5 1");
+		net.buildNet("2 25 25 5 1");
 		net.learningRate=0.00013;
 		net.momentum=0.45;
-		initData(Shape.BLOBS);
+		initData(Shape.RINGS);
 		int batch=0;
 		int batchSize=10;
 

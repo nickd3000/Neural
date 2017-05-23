@@ -73,6 +73,7 @@ public class NeuralNet {
 	//double mapperMax = 1;
 	
 	public double errorTotal = 0;
+	public boolean softmaxOutput = false;
 	
 	public NeuralNet() {
 	}
@@ -84,7 +85,7 @@ public class NeuralNet {
 		lookupTanH = new LookupTable(-10.0,10.0,5000, dl);
 
 		DoubleUnaryOperator dl2 = (x) -> {return (1-(x*x));};
-		lookupDerivative = new LookupTable(-2.0,2.0,5000, dl2);
+		lookupDerivative = new LookupTable(-3.0,3.0,5000, dl2);
 		
 		
 		/*
@@ -262,6 +263,7 @@ public class NeuralNet {
 		clearValues(true);
 		setBiasNodes();
 		propogateForward();
+		if (this.softmaxOutput==true) softmaxOutput();
 		errorTotal = calculateOutputError();
 	}
 	
@@ -305,6 +307,34 @@ public class NeuralNet {
 		
 	}
 	
+	// attempt to perform softmax
+	public void softmaxOutput() {
+		/*
+			SignalError = (ExpectedOutput - Output) * Output * (1-Output);
+				 error = o1(1 - o1)(t1 - o1)
+		 */
+		int numOutputNodes = layerSizes.get(numLayers-1);
+		int nodeOffset = nodeOffsets.get(numLayers-1);
+		double sum = 0;
+		double max = -100;
+		// add all outputs.
+		for (int i=0;i<numOutputNodes;i++) {
+			double val = nodes[nodeOffset+i].value;
+			//val = Math.exp(val);
+			sum += val; //Math.abs(val);
+			if (val>max) max=val;
+		}
+		
+		// scale outputs by sum?
+		for (int i=0;i<numOutputNodes;i++) {
+			double val = nodes[nodeOffset+i].value;
+			//val = Math.exp(val);
+			nodes[nodeOffset+i].value=(val)/sum;
+			//nodes[nodeOffset+i].value=(val)/max;
+			
+		}
+		
+	}
 
 	public double calculateOutputError() {
 		/*
@@ -412,7 +442,7 @@ public class NeuralNet {
 		// Experimental sparsify
 		double maxValue=0;
 		int maxId=0;
-		if (layerId==2000) // disable this.
+		if (layerId==1289) // disable this.
 		{
 			for (int i=nodeOffset;i<nodeOffset+numNodes;i++) {
 				n = nodes[i];

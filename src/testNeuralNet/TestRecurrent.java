@@ -10,24 +10,34 @@ import Neural.NeuralNet;
 // functionality to pick best output (so there is only one)?
 // 
 public class TestRecurrent {
-
+	static int midLayerSize = 50;
+	static int numChars=95;
+	static boolean skipCopy = false;
+	static double scaleMin=-1.0;
+	static double scaleMax=1.0;
+	static int deltaCount = 20; // number of learnings to combine for inertia
+	static double randomAmount=0.10;
+	
 	public void run() {
 		String book = loadTextFile("sherlock.txt");
+		//String book = loadTextFile("abcd.txt");
+		//String book = loadTextFile("wiki.txt");
 		
-		if (book.length()>0) System.out.println(book.substring(0, 2000));
+		if (book.length()>0) System.out.println(book.substring(0, 200));
 		
 		NeuralNet net = new NeuralNet();
-		net.buildNet("286 30 30 256");
-		net.learningRate=0.0013;
+		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 20 "+numChars;
+		net.buildNet(buildStr); //"286 60 256");
+		net.learningRate=0.00013*1.1;
 		net.momentum=0.45;
-		net.randomiseAllWeights(-0.5, 0.5);
+		net.randomiseAllWeights(-0.05, 0.05);
 		
-		for (int m=0;m<1000;m++) {
+		for (int m=0;m<10000;m++) {
 			System.out.println("Iteration:"+m);
-			for (int i=0;i<100;i++) {
-				learn(net, book, 1000);
+			for (int i=0;i<200;i++) {
+				learn(net, book, 10);
 			}
-			generateOutput(net, 200);
+			generateOutput(net, 140);
 		}
 	}
 	
@@ -36,7 +46,7 @@ public class TestRecurrent {
 		System.out.println("Sample output:");
 		for (int i=0;i<size;i++) {
 			setInputFromChar(net, prevChar);
-			copyInnerLayerToInput(net, 30, 0xff);
+			copyInnerLayerToInput(net, midLayerSize, numChars);
 			net.run();
 			prevChar = getOutputChar(net);
 			System.out.print(prevChar);
@@ -45,9 +55,11 @@ public class TestRecurrent {
 	}
 	
 	public void copyInnerLayerToInput(NeuralNet net, int numInnerNodes, int inputNodeOffset) {
+		if (skipCopy) return;
+		double range = scaleMax; //2;
 		for (int i=0;i<numInnerNodes;i++) {
-			double val = net.getInnerValue(1, i, -2.0, 2.0);
-			net.setInput(i+inputNodeOffset, val, -2.0, 2.0);
+			double val = net.getInnerValue(1, i, -range, range);
+			net.setInput(i+inputNodeOffset, val, scaleMin,scaleMax);
 		}
 	}
 	
@@ -55,7 +67,7 @@ public class TestRecurrent {
 		
 		char inChar=' ';
 		char outChar=' ';
-		int charPos=1000;
+		int charPos=0;
 		int uncommitted = 0;
 		charPos = (int)(Math.random()*(double)(corpus.length()-batchSize));
 		for (int i=0;i<batchSize;i++) {
@@ -63,13 +75,13 @@ public class TestRecurrent {
 			outChar=corpus.charAt(charPos+1);
 			
 			setInputFromChar(net, inChar);
-			setOutputFromChar(net, inChar);
-			copyInnerLayerToInput(net, 30, 0xff);
+			setOutputFromChar(net, outChar);
+			copyInnerLayerToInput(net, midLayerSize, numChars);
 			
 			net.run();
 			net.learn();
 			uncommitted++;
-			if (uncommitted>5) {
+			if (uncommitted>=deltaCount) {
 				net.applyWeightDeltas(); 
 				uncommitted=0;
 			}
@@ -81,44 +93,61 @@ public class TestRecurrent {
 	public char getOutputChar(NeuralNet net) {
 		double maxVal=-10;
 		int maxId=0;
-		for (int i=0;i<0xff;i++) {
-			double val = net.getOutput(i, 0.0, 1.0);
+		for (int i=0;i<numChars;i++) {
+			double val = net.getOutput(i, scaleMin, scaleMax);
 			if (val>maxVal) {
 				maxVal = val;
 				maxId=i;
 			}
 		}
-		return (char)maxId;
+		return (char)mapIntToChar(maxId);
 	}
 	
+
+	
 	public void setInputFromChar(NeuralNet net, char c) {
-		for (int i=0;i<0xff;i++) {
-			if (i==(int)c)  {
-				net.setInput(i, 1.0, 0.0, 1.0);
+		int ic = mapCharToInt(c);
+		for (int i=0;i<numChars;i++) {
+			if (i==ic)  {
+				net.setInput(i, scaleMax, scaleMin, scaleMax);
 			}
 			else {
-				net.setInput(i, 0.1, 0.0, 1.0);
+				net.setInput(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
 			}
 		}
 	}
 	public void setOutputFromChar(NeuralNet net, char c) {
-		for (int i=0;i<0xff;i++) {
-			if (i==(int)c)  {
-				net.setTarget(i, 1.0, 0.0, 1.0);
+		int ic = mapCharToInt(c);
+		for (int i=0;i<numChars;i++) {
+			if (i==ic)  {
+				net.setTarget(i, scaleMax, scaleMin, scaleMax);
 			}
 			else {
-				net.setTarget(i, 0.1, 0.0, 1.0);
+				net.setTarget(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
 			}
 		}
 	}
 	
+	// 32-127=95
 	public void testMapCharToInt(char c) {
 		int i = mapCharToInt(c);
+		
 		System.out.println("char: "+c+" int:"+i);
 	}
 	public int mapCharToInt(char c) {
 		int i = (int)c;
+		i=i-32;
+		if (i<0) i=0;
+		if (i>=numChars) i=numChars;
+		
 		return i;
+	}
+	public char mapIntToChar(int i) {
+		if (i<0) i=0;
+		if (i>numChars) i=numChars;
+		i+=32;
+		
+		return (char)(i);
 	}
 	
 	public String loadTextFile(String fileName) {

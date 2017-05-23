@@ -13,14 +13,14 @@ public class TestNeuralNet {
 		//testSin();
 		//testMapping();
 		
-		//TestBinaryClassifier testBC = new TestBinaryClassifier();
-		//testBC.run();
+		TestBinaryClassifier testBC = new TestBinaryClassifier();
+		testBC.run();
 		
 		//TestAudio testAudio = new TestAudio();
 		//testAudio.run();
 		
-		TestRecurrent testRecurrent = new TestRecurrent();
-		testRecurrent.run();
+		//TestRecurrent testRecurrent = new TestRecurrent();
+		//testRecurrent.run();
 	}
 
 	public static void testMapping() {
