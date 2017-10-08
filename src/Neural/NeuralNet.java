@@ -90,28 +90,6 @@ public class NeuralNet {
 		DoubleUnaryOperator dl2 = (x) -> {return (1-(x*x));};
 		lookupDerivative = new LookupTable(-3.0,3.0,5000, dl2);
 		
-		
-		/*
-		long time1 = System.nanoTime();
-		long time2 = System.nanoTime();
-		int numTests = 1000000;
-		double v = 0;
-		time1 = System.nanoTime();
-		for (int i=0;i<numTests;i++) {
-			v += Math.tanh(i*0.000001);
-		}
-		time2 = System.nanoTime();
-		System.out.println("Tanh:   " + (time2-time1));
-		v = 0;
-		time1 = System.nanoTime();
-		for (int i=0;i<numTests;i++) {
-			v += lookupTanH.getValue(i*0.000001);
-		}
-		time2 = System.nanoTime();
-		System.out.println("lookup: " + (time2-time1));
-		*/
-		
-		
 		Scanner scanner = new Scanner(structure);
 		while (scanner.hasNextInt()) {
 			numLayers++;
@@ -124,14 +102,6 @@ public class NeuralNet {
 		for (int i=0;i<numLayers-1;i++) {
 			layerSizes.set(i, layerSizes.get(i)+1);
 		}
-		
-		/*
-		numLayers = 3;
-		layerSizes.add(2+1);
-		layerSizes.add(2+1);
-		layerSizes.add(2+1);
-		*/
-		
 		
 		for (int i =0; i<numLayers;i++) {
 			nodeOffsets.add(numNodes);
@@ -184,7 +154,7 @@ public class NeuralNet {
 		}
 		
 		randomiseAllWeights(-0.3, 0.3);
-		randomiseAllWeights(-0.99, 0.99);
+		
 	}
 	
 	static double activationMax = 0;
@@ -218,30 +188,23 @@ public class NeuralNet {
 	
 	public double mapValue(double val, double min, double max) {
 		
-		//double targetMin = 0.1;
-		//double targetMax = 0.9;
 		double targetMin = -0.8;
 		double targetMax = 0.8;
 		
 		if (val<min) val=min;
 		if (val>max) val=max;
 		val=(val-min)/(max-min) * (targetMax-targetMin) + targetMin;
-		
-		//validateDouble(val);
-		
+
 		return val;
 	}
 	public double unmapValue(double val, double min, double max) {
-		//double targetMin = 0.1;
-		//double targetMax = 0.9;
+
 		double targetMin = -0.8;
 		double targetMax = 0.8;
 		
 		if (val<targetMin) val=targetMin;
 		if (val>targetMax) val=targetMax;
 		val=(val-targetMin)/(targetMax-targetMin) * (max-min) + min;
-		
-		//validateDouble(val);
 		
 		return val;
 	}
@@ -276,8 +239,6 @@ public class NeuralNet {
 	
 	public void propogateForward() {
 		
-		//System.out.println("propogateForward:");
-		
 		int thisLayerNodeCount;
 		int nextLayerNodeCount;
 		int numWeights;
@@ -293,20 +254,15 @@ public class NeuralNet {
 			numWeights = thisLayerNodeCount * nextLayerNodeCount;
 			weightsOffset = weightOffsets.get(layerId);
 			
-			//System.out.println(" Layer: "+layerId);
-			
 			for (int weightId = weightsOffset; weightId<weightsOffset+numWeights;weightId++) {
-				//System.out.println("   Processing weightId: "+weightId);
-				if (links[weightId].layerId!=layerId) System.out.println("Link in wrong layer.");
+
+				//if (links[weightId].layerId!=layerId) System.out.println("Link in wrong layer.");
 				
 				Link link = links[weightId];
 				sourceValue = nodes[link.sourceNodeId].value;
 				weight = link.weight;
 				nodes[link.targetNodeId].sum += sourceValue * weight;
 				
-				//validateDouble(nodes[link.targetNodeId].sum);
-				
-				//System.out.println("    " + sourceValue + " " + weight + "  " );
 			}
 			
 			activateLayer(layerId+1);
@@ -351,19 +307,16 @@ public class NeuralNet {
 		int numOutputNodes = layerSizes.get(numLayers-1);
 		int nodeOffset = nodeOffsets.get(numLayers-1);
 		double totalError = 0;
+		double output,target,diff,error;
+
 		for (int i=0;i<numOutputNodes;i++) {
-			double output = nodes[nodeOffset+i].value;
-			double target = targetValues[i];
-			double diff = (target-output);
+			output = nodes[nodeOffset+i].value;
+			target = targetValues[i];
+			diff = (target-output);
+			error = diff * derivative(output);
 
-			//double error = diff * output * (1.0-output);
-			double error = diff * derivative(output);
-
-			//validateDouble(error);
-			
 			nodes[nodeOffset+i].error = error;
 			totalError+=Math.abs(error);
-			//totalError+=(error);
 		}
 		
 		return totalError;
@@ -392,14 +345,10 @@ public class NeuralNet {
 			for (int w = weightOffset;w<weightOffset+numWeights;w++) {
 				Link link = links[w];
 				double targetError = nodes[link.targetNodeId].error;
-				//validateDouble(targetError);
 				nodes[link.sourceNodeId].error += targetError * link.weight;
 				
 				double change = targetError * nodes[link.sourceNodeId].value;
-				//link.weight += learningRate * change;  
 				link.delta += learningRate * change;
-				//validateDouble(link.delta);
-				//validateDouble(change);
 						
 			}
 			
@@ -408,10 +357,8 @@ public class NeuralNet {
 			for (int n = 0; n<layerSizes.get(layerId);n++) {
 				int nodeId = n + nodeOffsets.get(layerId);
 				double combinedError = nodes[nodeId].error;
-				//double modifiedError = combinedError;
-				//double modifiedError = nodes[nodeId].value * (1.0 - nodes[nodeId].value) * combinedError;
 				double modifiedError = derivative(nodes[nodeId].value) * combinedError;
-				//validateDouble(modifiedError);
+
 				nodes[nodeId].error = modifiedError;
 			}
 			
@@ -422,12 +369,10 @@ public class NeuralNet {
 	public void applyWeightDeltas() {
 		for (int i=0;i<numConnections;i++) {
 			
-			if (Math.random()>0.95) 
+			//if (Math.random()>0.95) // experimenting with only updating occasionally
 				links[i].weight += links[i].delta;
 			
 			links[i].delta*=momentum;	// Reduce the delta, which creates a momentum effect.
-			//validateDouble(links[i].delta);
-			//}
 		}
 	}
 	
@@ -439,7 +384,6 @@ public class NeuralNet {
 		
 		for (int i=nodeOffset;i<nodeOffset+numNodes;i++) {
 			n = nodes[i];
-			//n.value = Math.tanh(n.sum);
 			n.value = activation(n.sum);
 			
 			// Set bias node to 1.
@@ -474,7 +418,6 @@ public class NeuralNet {
 		double span=max-min;
 		for (Link l : links) {
 			l.weight = min + (Math.random()*span);
-			//l.weight = 0.1;
 		}
 	}
 	
