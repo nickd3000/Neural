@@ -1,10 +1,12 @@
 package testNeuralNet;
 
-import Neural.NeuralNet;
-import ToolBox.BasicDisplay;
-import ToolBox.BasicGraph;
 
 import java.awt.*;
+
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicGraph;
+
+import Neural.NeuralNet;
 
 public class TestBinaryClassifier {
 
@@ -33,10 +35,10 @@ public class TestBinaryClassifier {
 
 		BasicGraph graphError = new BasicGraph(2000);
 
-		net.buildNet("2 25 25 5 1");
+		net.buildNet("2 5 5 1");
 		net.learningRate=0.00013;
 		net.momentum=0.45;
-		initData(Shape.RINGS);
+		initData(Shape.BLOBS);
 		int batch=0;
 		int batchSize=10;
 

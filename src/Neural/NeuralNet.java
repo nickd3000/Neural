@@ -1,12 +1,15 @@
 package Neural;
 
-import ToolBox.BasicDisplay;
-import ToolBox.LookupTable;
+//import com.physmo.ToolBox.BasicDisplay;
+//import ToolBox.LookupTable;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.DoubleUnaryOperator;
+
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.LookupTable;
 
 //import java.util.List;
 
@@ -54,7 +57,7 @@ public class NeuralNet {
 	public LookupTable lookupDerivative;
 	
 	public double learningRate = 0.025;
-	public double momentum = 0.4;
+	public double momentum = 0.99; //0.4
 	
 	public Link [] links;
 	Node [] nodes;
@@ -181,6 +184,7 @@ public class NeuralNet {
 		}
 		
 		randomiseAllWeights(-0.3, 0.3);
+		randomiseAllWeights(-0.99, 0.99);
 	}
 	
 	static double activationMax = 0;
@@ -194,6 +198,9 @@ public class NeuralNet {
 		
 		//double ret = Math.tanh(val);
 		double ret = lookupTanH.getValue(val);
+		
+		// try relu:
+		//double ret = Math.max(0,val);
 		
 		//validateDouble(ret);
 		return ret;
@@ -415,7 +422,7 @@ public class NeuralNet {
 	public void applyWeightDeltas() {
 		for (int i=0;i<numConnections;i++) {
 			
-			//if (Math.random()>0.5) {
+			if (Math.random()>0.95) 
 				links[i].weight += links[i].delta;
 			
 			links[i].delta*=momentum;	// Reduce the delta, which creates a momentum effect.

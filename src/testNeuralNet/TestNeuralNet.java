@@ -1,10 +1,12 @@
 package testNeuralNet;
 
 import Neural.NeuralNet;
-import ToolBox.BasicDisplay;
-import ToolBox.BasicGraph;
+
 
 import java.awt.*;
+
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicGraph;
 
 public class TestNeuralNet {
 

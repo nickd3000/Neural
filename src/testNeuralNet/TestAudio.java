@@ -1,14 +1,20 @@
 package testNeuralNet;
 
-import Neural.NeuralNet;
-import ToolBox.BasicDisplay;
-import ToolBox.BasicGraph;
+import java.awt.Color;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.SourceDataLine;
-import java.awt.*;
-import java.io.*;
+
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicGraph;
+
+import Neural.NeuralNet;
 
 public class TestAudio {
 
