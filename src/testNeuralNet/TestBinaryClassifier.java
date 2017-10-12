@@ -35,10 +35,10 @@ public class TestBinaryClassifier {
 
 		BasicGraph graphError = new BasicGraph(2000);
 
-		net.buildNet("2 5 5 1");
+		net.buildNet("2 2 2 1");
 		net.learningRate=0.00013;
 		net.momentum=0.45;
-		initData(Shape.BLOBS);
+		initData(Shape.SQUAREHOLE);
 		int batch=0;
 		int batchSize=10;
 
@@ -83,24 +83,26 @@ public class TestBinaryClassifier {
 					
 			graphError.addData(error*10.0);
 
-			display.cls(new Color(100,200,100));
-			display.setDrawColor(Color.BLACK);
-			//for (int n=0;n<15;n++) {
-			//	display.drawText("W"+n+" "+net.getWeight(n), 460, 210+(n*13));
-			//}
-			
-			graphError.draw(display, 10, 420, 400, 120, Color.yellow);
-			
-			drawMatrix(10, 10, 200);
-			drawPoints(10, 10, 200);
-			net.drawNetwork(display, 430, 10, 300, 300);
-			
-			display.setDrawColor(Color.WHITE);
-			display.drawText("Iteration  "+i, 10, 555);
-			display.drawText("Error  "+error, 10, 570);
-			display.drawText("Learning rate  "+net.learningRate, 10, 585);
-	
-			display.refresh();
+			if (i%50==0) {
+				display.cls(new Color(100,200,100));
+				display.setDrawColor(Color.BLACK);
+				//for (int n=0;n<15;n++) {
+				//	display.drawText("W"+n+" "+net.getWeight(n), 460, 210+(n*13));
+				//}
+				
+				graphError.draw(display, 10, 420, 400, 120, Color.yellow);
+				
+				drawMatrix(10, 10, 200);
+				drawPoints(10, 10, 200);
+				net.drawNetwork(display, 430, 10, 300, 300);
+				
+				display.setDrawColor(Color.WHITE);
+				display.drawText("Iteration  "+i, 10, 555);
+				display.drawText("Error  "+error, 10, 570);
+				display.drawText("Learning rate  "+net.learningRate, 10, 585);
+		
+				display.refresh();
+			}
 		}
 	}
 	

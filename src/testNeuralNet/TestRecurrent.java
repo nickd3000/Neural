@@ -10,39 +10,42 @@ import Neural.NeuralNet;
 // functionality to pick best output (so there is only one)?
 // 
 public class TestRecurrent {
-	static int midLayerSize = 50;
+	static int midLayerSize = 30; // 50
 	static int numChars=95;
 	static boolean skipCopy = false;
-	static double scaleMin=-1.0;
-	static double scaleMax=1.0;
-	static int deltaCount = 20; // number of learnings to combine for inertia
-	static double randomAmount=0.10;
+	static double scaleMin=-0.99;
+	static double scaleMax=0.99;
+	static int deltaCount = 1; // number of learnings to combine for inertia
+	static double randomAmount=0.010;
 	
 	public void run() {
+		//String book = loadTextFile("fox.txt");
 		String book = loadTextFile("sherlock.txt");
+		//String book = loadTextFile("sphynx.txt");
 		//String book = loadTextFile("abcd.txt");
 		//String book = loadTextFile("wiki.txt");
 		
 		if (book.length()>0) System.out.println(book.substring(0, 200));
 		
 		NeuralNet net = new NeuralNet();
-		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 20 "+numChars;
+		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 30 30 30 30 "+numChars;
 		net.buildNet(buildStr); //"286 60 256");
-		net.learningRate=0.00013*1.1;
+		net.learningRate=0.0013*10.1;
 		net.momentum=0.45;
-		net.randomiseAllWeights(-0.05, 0.05);
+		net.randomiseAllWeights(-0.5, 0.5);
+		net.softmaxOutput=false;
 		
 		for (int m=0;m<10000;m++) {
 			System.out.println("Iteration:"+m);
 			for (int i=0;i<200;i++) {
-				learn(net, book, 10);
+				learn(net, book, 2);
 			}
 			generateOutput(net, 140);
 		}
 	}
 	
 	public void generateOutput(NeuralNet net, int size) {
-		char prevChar = 'a';
+		char prevChar = ' ';
 		System.out.println("Sample output:");
 		for (int i=0;i<size;i++) {
 			setInputFromChar(net, prevChar);
@@ -91,6 +94,8 @@ public class TestRecurrent {
 	}
 	
 	public char getOutputChar(NeuralNet net) {
+		return getOutputCharWeighted(net);
+		/*
 		double maxVal=-10;
 		int maxId=0;
 		for (int i=0;i<numChars;i++) {
@@ -101,8 +106,40 @@ public class TestRecurrent {
 			}
 		}
 		return (char)mapIntToChar(maxId);
+		*/
 	}
 	
+	// version with roulette style weighted selection.
+	public char getOutputCharWeighted(NeuralNet net) {
+
+		int maxId=0;
+		double total=0;
+		double val=0;
+		
+		for (int i=0;i<numChars;i++) {
+			val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
+			val=val*val*val;
+			total += val;
+		}
+		
+		double pick = Math.random()*total;
+			
+		double runningTotal=0,previousRunningTotal=0;
+		for (int i=0;i<numChars;i++) {
+			val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
+			val=val*val*val;
+			runningTotal += val;
+			
+			if (val>0 && pick>=previousRunningTotal &&
+				pick<=runningTotal) {
+				maxId=i;
+				break;
+			}
+
+			previousRunningTotal = runningTotal;
+		}
+		return (char)mapIntToChar(maxId);
+	}
 
 	
 	public void setInputFromChar(NeuralNet net, char c) {
@@ -112,7 +149,8 @@ public class TestRecurrent {
 				net.setInput(i, scaleMax, scaleMin, scaleMax);
 			}
 			else {
-				net.setInput(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
+				net.setInput(i, 0, scaleMin, scaleMax);
+				//net.setInput(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
 			}
 		}
 	}
@@ -123,7 +161,8 @@ public class TestRecurrent {
 				net.setTarget(i, scaleMax, scaleMin, scaleMax);
 			}
 			else {
-				net.setTarget(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
+				net.setTarget(i, 0, scaleMin, scaleMax);
+				//net.setTarget(i, scaleMin+(Math.random()*randomAmount), scaleMin, scaleMax);
 			}
 		}
 	}
