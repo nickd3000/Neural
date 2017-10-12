@@ -10,7 +10,7 @@ import Neural.NeuralNet;
 // functionality to pick best output (so there is only one)?
 // 
 public class TestRecurrent {
-	static int midLayerSize = 30; // 50
+	static int midLayerSize = 80; // 50
 	static int numChars=95;
 	static boolean skipCopy = false;
 	static double scaleMin=-0.99;
@@ -28,7 +28,7 @@ public class TestRecurrent {
 		if (book.length()>0) System.out.println(book.substring(0, 200));
 		
 		NeuralNet net = new NeuralNet();
-		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 30 30 30 30 "+numChars;
+		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 80 80 "+numChars;
 		net.buildNet(buildStr); //"286 60 256");
 		net.learningRate=0.0013*10.1;
 		net.momentum=0.45;
