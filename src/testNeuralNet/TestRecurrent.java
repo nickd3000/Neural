@@ -20,8 +20,8 @@ public class TestRecurrent {
 	
 	public void run() {
 		//String book = loadTextFile("fox.txt");
-		String book = loadTextFile("sherlock.txt");
-		//String book = loadTextFile("sphynx.txt");
+		//String book = loadTextFile("sherlock.txt");
+		String book = loadTextFile("sphynx.txt");
 		//String book = loadTextFile("abcd.txt");
 		//String book = loadTextFile("wiki.txt");
 		
@@ -30,7 +30,7 @@ public class TestRecurrent {
 		NeuralNet net = new NeuralNet();
 		String buildStr = ""+(numChars+midLayerSize+2)+" "+midLayerSize+" 80 80 "+numChars;
 		net.buildNet(buildStr); //"286 60 256");
-		net.learningRate=0.0013*10.1;
+		net.learningRate=0.00013*1.1;
 		net.momentum=0.45;
 		net.randomiseAllWeights(-0.5, 0.5);
 		net.softmaxOutput=false;
@@ -47,14 +47,16 @@ public class TestRecurrent {
 	public void generateOutput(NeuralNet net, int size) {
 		char prevChar = ' ';
 		System.out.println("Sample output:");
+		double error = 0;
 		for (int i=0;i<size;i++) {
 			setInputFromChar(net, prevChar);
 			copyInnerLayerToInput(net, midLayerSize, numChars);
 			net.run();
+			error += net.errorTotal;
 			prevChar = getOutputChar(net);
 			System.out.print(prevChar);
 		}
-		System.out.print("\n");
+		System.out.print("\n " + error + " ");
 	}
 	
 	public void copyInnerLayerToInput(NeuralNet net, int numInnerNodes, int inputNodeOffset) {
