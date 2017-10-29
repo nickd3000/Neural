@@ -1,5 +1,7 @@
 package testNeuralNet;
 
+import Neural.ActivationType;
+import Neural.NN2;
 import Neural.NeuralNet;
 
 
@@ -13,6 +15,7 @@ public class TestNeuralNet {
 	public static void main(String[] args) {
 		//testBasic();
 		//testSin();
+		//testSinNN2();
 		//testMapping();
 		
 		//TestBinaryClassifier testBC = new TestBinaryClassifier();
@@ -21,7 +24,10 @@ public class TestNeuralNet {
 		//TestAudio testAudio = new TestAudio();
 		//testAudio.run();
 		
-		TestRecurrent testRecurrent = new TestRecurrent();
+		//TestRecurrent testRecurrent = new TestRecurrent();
+		//testRecurrent.run();
+		
+		TestRecurrentNN2 testRecurrent = new TestRecurrentNN2();
 		testRecurrent.run();
 	}
 
@@ -118,10 +124,93 @@ public class TestNeuralNet {
 		}
 	}
 	
+	public static void testSinNN2() {
+		BasicDisplay display = new BasicDisplay(640, 480);
+		BasicGraph graphError = new BasicGraph(20000);
+		NN2 net = new NN2()
+				.addLayer(1)
+				.activationType(ActivationType.TANH)
+				.addLayer(10)
+				.activationType(ActivationType.TANH)
+//				.addLayer(10)
+//				.activationType(ActivationType.TANH)
+//				.addLayer(10)
+//				.activationType(ActivationType.TANH)
+				.addLayer(1)
+				.activationType(ActivationType.TANH)
+				.randomizeWeights(-2, 2)
+				.learningRate(0.015);
+				
+//		net.buildNet("1 4 1");
+//		net.randomiseAllWeights(-2, 2);
+//		net.learningRate = 0.0015;
+//		net.momentum = 0.65;
+		display.startTimer();
+		
+		for (int i=0;i<50000000;i++) {
+			for (int e=0;e<10;e++) {
+				double rnd = Math.random()*9.00;
+				double res = function(rnd);
+				
+				net.setInputValue(0, rnd);
+				net.setOutputTargetValue(0, res);
+				net.run(true); 
+				//net.learn();
+			}
+			
+			//net.applyWeightDeltas(); 
+				
+			//System.out.println("Out1:" + net.getOutput(0) + " Out2:" + net.getOutput(1));
+			
+
+			//if (every(i,100)) {
+			if (display.getEllapsedTime()>1000/30)
+			{
+				display.startTimer();
+				
+				net.run(false);
+				display.cls(Color.ORANGE);
+				int y=0;
+				double error=0;
+				for (int x=0;x<300;x++) {
+					net.setInputValue(0, (double)x/50.0);
+					net.run(false);
+					net.setOutputTargetValue(0, function((double)x/50.0));
+					error+=net.getCombinedError();
+					y = transformGraphValue(0);
+					display.setDrawColor(Color.gray);
+					display.drawRect(x, y, x+2, y+2);
+					y = transformGraphValue(function((double)x/50.0));
+					display.setDrawColor(Color.BLUE);
+					display.drawRect(x, y, x+2, y+2);
+					y = transformGraphValue(net.getOutputValue(0));
+					display.setDrawColor(Color.green);
+					display.drawRect(x, y, x+2, y+2);
+				}
+				
+				// fixme
+//				net.drawNetwork(display, 330, 20, 300, 200);
+//				graphError.addData(error/300.0);
+//				graphError.draw(display, 20, 170, 300, 300, Color.gray);
+				
+				
+//				for (int j=0; j<net.numConnections; j++) {
+//					int w = 200+(int)(net.getWeight(j)*25.0);
+//					graphError.addData(w/30.0);
+//					display.setDrawColor(Color.BLUE);
+//					display.drawFilledRect((int)(w), 120+j, 2, 2);
+//				}
+				
+				//System.out.println("Iterations:" + i + " \tError: " + error/300.0);
+				display.refresh();
+				//net.learningRate = Math.abs(error)/300.0;
+			}
+		}
+	}
 	public static double function(double x) {
 		//return (x-1)/5;
 		//return Math.tanh(x);
-		double val = (Math.sin(x*1)*0.4 + (Math.sin(x*2)*0.4));//+ (Math.sin(x*5)*0.2));
+		double val = (Math.sin(x*1)*0.4 + (Math.sin(x*2)*0.4)) + (Math.sin(x*5)*0.2);
 		//return (Math.cos(x)*0.5)+0.5;
 		//if (val<0) val=-0.5;
 		//if (val>0) val=0.5;

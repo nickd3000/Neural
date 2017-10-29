@@ -221,11 +221,19 @@ public class NeuralNet {
 		int offset = nodeOffsets.get(numLayers-1);
 		return unmapValue(nodes[offset+i].value,min,max);
 	}
-	
+	public double getOutput(int i) {
+		int offset = nodeOffsets.get(numLayers-1);
+		return nodes[offset+i].value;
+	}
 	
 	public double getInnerValue(int layer, int i, double min, double max) {
 		int offset = nodeOffsets.get(layer);
 		return unmapValue(nodes[offset+i].value,min,max);
+	}
+	
+	public double getInnerValue(int layer, int i) {
+		int offset = nodeOffsets.get(layer);
+		return nodes[offset+i].value;
 	}
 	
 	// temp name
@@ -283,8 +291,8 @@ public class NeuralNet {
 		// add all outputs.
 		for (int i=0;i<numOutputNodes;i++) {
 			double val = nodes[nodeOffset+i].value;
-			//val = Math.exp(val);
-			sum += val; //Math.abs(val);
+			val = Math.abs(val);
+			sum += Math.exp(val);
 			if (val>max) max=val;
 		}
 		
@@ -292,7 +300,7 @@ public class NeuralNet {
 		for (int i=0;i<numOutputNodes;i++) {
 			double val = nodes[nodeOffset+i].value;
 			//val = Math.exp(val);
-			nodes[nodeOffset+i].value=(val)/sum;
+			nodes[nodeOffset+i].value=(Math.exp(val))/sum;
 			//nodes[nodeOffset+i].value=(val)/max;
 			
 		}
@@ -369,7 +377,7 @@ public class NeuralNet {
 	public void applyWeightDeltas() {
 		for (int i=0;i<numConnections;i++) {
 			
-			//if (Math.random()>0.95) // experimenting with only updating occasionally
+			//if (Math.random()>0.65) // experimenting with only updating occasionally
 				links[i].weight += links[i].delta;
 			
 			links[i].delta*=momentum;	// Reduce the delta, which creates a momentum effect.
