@@ -3,6 +3,8 @@ package Neural;
 import java.util.ArrayList;
 import java.util.List;
 
+import Activations.ActivationType;
+
 // Rewriting neural network class with what I've learned...
 
 public class NN2 {
@@ -11,6 +13,9 @@ public class NN2 {
 	List<NodeLayer> nodeLayers = new ArrayList<NodeLayer>();
 	List<WeightLayer> weightLayers = new ArrayList<WeightLayer>();
 	double learningRate = 0.1;
+	double dampenValue = 0.95;
+	double inputScale=1,inputShift=0;
+	double outputScale=1,outputShift=0;
 	double combinedError = 0;
 	public NN2() {
 		
@@ -55,27 +60,46 @@ public class NN2 {
 		return this;
 	}
 	
+	public NN2 dampenValue(double value) {
+		this.dampenValue = dampenValue;
+		return this;
+	}
+	
 	public NN2 activationType(ActivationType actTp) {
 		NodeLayer nl = getLastNodeLayer();
 		nl.activationType = actTp;
 		return this;
 	}
+
+	
+	public NN2 inputMapping(double inputScale, double inputShift) {
+		this.inputScale=inputScale;
+		this.inputShift=inputShift;
+		return this;
+	}
+	public NN2 outputMapping(double outputScale, double outputShift) {
+		this.outputScale=outputScale;
+		this.outputShift=outputShift;
+		return this;
+	}
 	
 	public void setInputValue(int i, double v) {
-		nodeLayers.get(0).values[i]=v;
+		nodeLayers.get(0).values[i]=mapValue(v,inputScale,inputShift);
 	}
 	
 	public void setOutputTargetValue(int i, double v) {
-		getLastNodeLayer().targets[i]=v;
+		getLastNodeLayer().targets[i]=mapValue(v,inputScale,inputShift);
 	}
 	
 	public double getOutputValue(int i) {
-		return getLastNodeLayer().values[i];
+		return unmapValue(getLastNodeLayer().values[i],outputScale,outputShift);
+		//return getLastNodeLayer().derivatives[i];
 	}
 	
 	public double getInnerValue(int layer, int node) {
 		NodeLayer nl = nodeLayers.get(layer);
 		return nl.values[node];
+		//return nl.derivatives[node];
 	}
 	
 	@Override
@@ -93,9 +117,23 @@ public class NN2 {
 	}
 	
 	public void run(boolean learn) {
+		feedForward();
+		
+		backpropogate();
+		
+		if (learn) {
+			learn();
+		}
+	}
+	
+
+	
+	// STEP 1
+	// Feed input values forward and calculate output values and errors.
+	public void feedForward() {
+		//activateLayer(nodeLayers.get(0));
 		
 		for (WeightLayer wl : weightLayers) {
-			
 			resetBiasNode(wl.sourceNodeLayer);
 			propogateLayerPair(wl);
 			activateLayer(wl.targetNodeLayer);
@@ -107,22 +145,28 @@ public class NN2 {
 		
 		calculateLayerErrors(getLastNodeLayer());
 		combinedError = sumLayerError(getLastNodeLayer());
+	}
+	
+	// STEP 2
+	// Back propogate and calculate deltas.
+	public void backpropogate() {
+		for (int i=weightLayers.size()-1;i>=0;i--) {
+			backPropogateLayerPair(weightLayers.get(i));
+		}
 		
-		if (learn) {
-			for (int i=weightLayers.size()-1;i>=0;i--) {
-				backPropogateLayerPair(weightLayers.get(i));
-			}
-			
-			for (WeightLayer wl : weightLayers) {	
-				dampenDeltas(wl,0.99);
-				updateDeltas(wl);
-			}
-			
-			for (WeightLayer wl : weightLayers) {	
-				adjustWeights(wl);
-			}
+		for (WeightLayer wl : weightLayers) {	
+			dampenDeltas(wl,dampenValue);
+			updateDeltas(wl);
 		}
 	}
+	
+	// STEP 3
+	public void learn() {
+		for (WeightLayer wl : weightLayers) {	
+			adjustWeights(wl);
+		}
+	}
+
 	
 	public double getCombinedError() {
 		return combinedError;
@@ -163,10 +207,6 @@ public class NN2 {
 			}
 		}
 		
-		// calc derivative for errors we just propogated back
-//		for (int sv = 0; sv<sourceErrors.length;sv++) {
-//			sourceErrors[sv] = derivativeTanh(sourceValues[sv])*sourceErrors[sv];
-//		}
 	}
 	
 	private void dampenDeltas(WeightLayer wl, double multiplier) {
@@ -179,10 +219,12 @@ public class NN2 {
 		}
 	}
 	
+	// Add error to delta value.
 	private void updateDeltas(WeightLayer wl) {
 		double[] deltas = wl.deltas;		
 		double[] sourceErrors = wl.sourceNodeLayer.errors;
 		double[] targetErrors = wl.targetNodeLayer.errors;
+		double[] targetDerivatives = wl.targetNodeLayer.derivatives;
 		double[] sourceValues = wl.sourceNodeLayer.values;
 		
 		int w=0;
@@ -190,6 +232,7 @@ public class NN2 {
 		for (int sv = 0; sv<sourceErrors.length;sv++) {
 			for (int tv = 0; tv<targetErrors.length;tv++) {
 				double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
+				delta *= targetDerivatives[tv];
 				deltas[w]+=delta;
 				w++;
 			}
@@ -216,86 +259,21 @@ public class NN2 {
 	}
 
 		
-	// TODO add different types of activation.
 	private void activateLayer(NodeLayer nl) {
-		if (nl.activationType==ActivationType.NONE) return;
-		
-		if (nl.activationType==ActivationType.TANH) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.values[i] = activationTanh(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.RELU) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.values[i] = activationRelu(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.LINEAR) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.values[i] = activationLinear(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.SIGMOID) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.values[i] = activationSigmoid(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.SOFTMAX) {
-			activationSoftmax(nl);
-		}
+		nl.activationType.getInstance().CalculateActivation(nl);
 	}
 	
 	public void calculateLayerDerivatives(NodeLayer nl) {
-		if (nl.activationType==ActivationType.NONE) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = nl.values[i];
-			}
-		}
-		
-		if (nl.activationType==ActivationType.TANH) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = derivativeTanh(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.RELU) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = derivativeRelu(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.LINEAR) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = derivativeLinear(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.SIGMOID) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = derivativeSigmoid(nl.values[i]);
-			}
-		}
-		
-		if (nl.activationType==ActivationType.SOFTMAX) {
-			for (int i=0;i<nl.values.length;i++) {
-				nl.derivatives[i] = derivativeSoftmax(nl.values[i]);
-			}
-		}
+		nl.activationType.getInstance().CalculateDerivative(nl);
 	}
 	
 	// derivatives are required before this is executed.
 	public void calculateLayerErrors(NodeLayer nl) {
 		for (int i=0;i<nl.values.length;i++) {
 			double e = nl.targets[i]-nl.values[i];
-			nl.errors[i] = e * nl.derivatives[i];
+			nl.errors[i] = e;// * nl.derivatives[i];
 		}
 	}
-	
-
 	
 	public double sumLayerError(NodeLayer nl) {
 		double sum=0;
@@ -308,62 +286,15 @@ public class NN2 {
 	public void resetBiasNode(NodeLayer nl) {
 		int numNodes = nl.size;
 		nl.values[numNodes-1]=1.0f;
+		nl.errors[numNodes-1]=0.0f;
+		nl.derivatives[numNodes-1]=1.0f;
 	}
 	
-	private double activationTanh(double x) {
-		return Math.tanh(x);
+	public double mapValue(double val, double scale, double shift) {
+		return (val*scale)+shift;
 	}
 	
-	private double derivativeTanh(double x) {
-		return (1-(x*x));
+	public double unmapValue(double val, double scale, double shift) {
+		return (val/scale)+shift;
 	}
-	
-	private double activationRelu(double x) {
-		return Math.max(0,x);
-	}
-	
-	private double derivativeRelu(double x) {
-		if (x<0) return 0.1;
-		else return 1;
-	}
-	
-	private double activationLinear(double x) {
-		return x;
-	}
-	
-	private double derivativeLinear(double x) {
-		return 1;
-	}
-	
-	private double activationSigmoid(double x) {
-		return 1.0 / (1 + Math.exp(-1.0 * x));
-	}
-	
-	private double derivativeSigmoid(double x) {
-		return x * (1.0 - x);
-	}
-	
-	private void activationSoftmax(NodeLayer nl) {
-
-		double sum = 0;
-		double max = -100;
-		// add all outputs.
-		for (int i=0;i<nl.size;i++) {
-			double val = nl.values[i];
-			val = Math.abs(val);
-			sum += Math.exp(val);
-			if (val>max) max=val;
-		}
-		
-		// scale outputs by sum?
-		for (int i=0;i<nl.size;i++) {
-			double val = nl.values[i];
-			nl.values[i]=(Math.exp(val))/sum;			
-		}
-	}
-	
-	private double derivativeSoftmax(double x) {
-		return x * (1.0 - x);
-	}
-	
 }

@@ -6,11 +6,16 @@ import java.awt.*;
 import com.physmo.toolbox.BasicDisplay;
 import com.physmo.toolbox.BasicGraph;
 
+import Activations.ActivationType;
+import Neural.NN2;
 import Neural.NeuralNet;
 
-public class TestBinaryClassifier {
+public class TestBinaryClassifierNN2 {
 
-
+	public static void main(String[] args) {
+		TestBinaryClassifierNN2 bc = new TestBinaryClassifierNN2();
+		bc.run();
+	}
 	
 	enum Shape {SQUARE, HALF, SQUAREHOLE, BLOBS, RINGS};
 	class DataPoint {
@@ -25,24 +30,37 @@ public class TestBinaryClassifier {
 	
 	static int numPoints = 2000;
 	DataPoint [] data = new DataPoint[numPoints]; 
-	NeuralNet net = new NeuralNet();
+	NN2 net = null;
 	
 	BasicDisplay display = new BasicDisplay(800, 600);
 	
-	
-	
-	
+
 	public void run() {
-		// atanh(x) = (log(1+x) - log(1-x))/2
+		
+		net = new NN2()
+				.addLayer(2)
+				.activationType(ActivationType.TANH)
+				.addLayer(10)
+				.activationType(ActivationType.TANH)
+//				.addLayer(10)
+//				.activationType(ActivationType.TANH)
+				.addLayer(1)
+				.activationType(ActivationType.NONE)
+				.learningRate(0.0013)
+				.dampenValue(0.1951)
+				.randomizeWeights(-0.1, 0.1)
+				.inputMapping(1, 0)
+				.outputMapping(1, 0);
+
 
 		BasicGraph graphError = new BasicGraph(2000);
 
-		net.buildNet("2 2 2 1");
-		net.learningRate=0.00013;
-		net.momentum=0.45;
+//		net.buildNet("2 2 2 1");
+//		net.learningRate=0.00013;
+//		net.momentum=0.45;
 		initData(Shape.SQUAREHOLE);
 		int batch=0;
-		int batchSize=10;
+		int batchSize=100;
 
 		double error=0.0;
 		for (int i=0;i<100000;i++) {
@@ -50,58 +68,56 @@ public class TestBinaryClassifier {
 			for (int j=0;j<numPoints;j++) {
 				batch++;
 				int d = (int)(Math.random()*numPoints);
-				net.setInput(0, data[d].x, -1, 1);
-				net.setInput(1, data[d].y, -1, 1);
-				net.setTarget(0, data[d].v, -1, 1);
-				net.run();
+				net.setInputValue(0, data[d].x);// -1, 1);
+				net.setInputValue(1, data[d].y);//, -1, 1);
+				net.setOutputTargetValue(0, data[d].v);//, -1, 1);
 				
-				error += net.errorTotal;
-						
-				//if (i>1000) net.learningRate=0.001;
-			
-				net.learn();
+				//net.run(true);
+				
+				net.feedForward();
+				net.backpropogate();
+				//net.backpropogate();
+				//net.learn();
 				
 				if (batch>batchSize) {
 					batch=0;
-					net.applyWeightDeltas();
+					
+					net.learn();
 				}
+				
 			}
 			
 			error=0.0;
 			for (int j=0;j<numPoints;j++) {
-				net.setInput(0, data[j].x, -1, 1);
-				net.setInput(1, data[j].y, -1, 1);
-				net.setTarget(0, data[j].v, -1, 1);
-				net.run();
-				error += net.errorTotal;
+				net.setInputValue(0, data[j].x);//, -1, 1);
+				net.setInputValue(1, data[j].y);//, -1, 1);
+				net.setOutputTargetValue(0, data[j].v);//, -1, 1);
+				//net.run(false);
+				net.feedForward();
+				error += net.getCombinedError();
 			}
 			
 			error = (error/(double)numPoints);
-			if (error>0.0001) net.learningRate= Math.abs(error) * 0.01;
-			if (net.learningRate>0.01) net.learningRate=0.01;
-			if (net.learningRate<0.0000001) net.learningRate=0.0000001;
-			//net.learningRate=0.01;
-			//net.learningRate*=0.9999;
-					
+			//if (error>0.0001) net.learningRate( Math.abs(error) * 0.01);
+			//if (net.learningRate>0.01) net.learningRate=0.01;
+			//if (net.learningRate<0.0000001) net.learningRate=0.0000001;
+	
 			graphError.addData(error*10.0);
 
-			if (i%50==0) {
+			if (i%10==0) {
 				display.cls(new Color(100,200,100));
 				display.setDrawColor(Color.BLACK);
-				//for (int n=0;n<15;n++) {
-				//	display.drawText("W"+n+" "+net.getWeight(n), 460, 210+(n*13));
-				//}
 				
 				graphError.draw(display, 10, 420, 400, 120, Color.yellow);
 				
 				drawMatrix(10, 10, 200);
 				drawPoints(10, 10, 200);
-				net.drawNetwork(display, 430, 10, 300, 300);
+				//net.drawNetwork(display, 430, 10, 300, 300);
 				
 				display.setDrawColor(Color.WHITE);
 				display.drawText("Iteration  "+i, 10, 555);
 				display.drawText("Error  "+error, 10, 570);
-				display.drawText("Learning rate  "+net.learningRate, 10, 585);
+				//display.drawText("Learning rate  "+net.learningRate, 10, 585);
 		
 				display.refresh();
 			}
@@ -123,10 +139,10 @@ public class TestBinaryClassifier {
 	}
 	
 	public double rule(Shape shape, double x, double y) {
-		double val=0;
+		double val=-1;
 		switch (shape) {
 		case HALF:
-			val = x<0?-1:1;
+			val = x<0?0:1;
 			break;
 		case SQUARE:
 			val = -1;
@@ -166,12 +182,20 @@ public class TestBinaryClassifier {
 			x = (data[i].x + 1.0) * (double)scale;
 			y = (data[i].y + 1.0) * (double)scale;
 			v = data[i].v;
-			if (v<-0.8) c = colDataPointOff;
+			if (v<0.2) c = colDataPointOff;
 			else if (v>0.8) c = colDataPointOn;
 			else c = Color.lightGray;
 			display.setDrawColor(c);
 			display.drawCircle(x+xo, y+yo, 5);
 		}
+	}
+	
+	public Color fuck(double v) {
+		int vv =(int) ((v+0.5)*200.0);
+		if (vv<0) vv=0;
+		
+		if (vv>255) vv=255;
+		return new Color(50,50,vv);
 	}
 	
 	public void drawMatrix(int xo, int yo, int scale) {
@@ -185,16 +209,20 @@ public class TestBinaryClassifier {
 			for (int x=-100;x<100;x+=step) {
 				xx = x * 0.01;//(data[i].x + 1.0) * (double)scale;
 				yy = y * 0.01;//y = (data[i].y + 1.0) * (double)scale;
-				net.setInput(0, xx, -1, 1);
-				net.setInput(1, yy, -1, 1);
-				net.run();
-				v = net.getOutput(0, -1, 1);
-				if (v<-0.5) c = colMatrixOff;
-				else if (v>0.5) c = colMatrixOn;
+				net.setInputValue(0, xx);//, -1, 1);
+				net.setInputValue(1, yy);//, -1, 1);
+				
+				//net.run(false);
+				net.feedForward();
+				
+				v = net.getOutputValue(0);//, -1, 1);
+				if (v<0.3) c = colMatrixOff;
+				else if (v>0.7) c = colMatrixOn;
 				else c = colMatrixMid;
 				//display.drawCircle(x, y, 5, c);
 				int dx = (int)((x + 100) * drawScale);
 				int dy = (int)((y + 100) * drawScale);
+				c = fuck(v);
 				display.setDrawColor(c);
 				display.drawFilledRect(dx+xo,dy+yo,(int)(step*drawScale),(int)(step*drawScale));
 			}

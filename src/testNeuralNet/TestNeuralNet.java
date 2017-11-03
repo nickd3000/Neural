@@ -1,6 +1,5 @@
 package testNeuralNet;
 
-import Neural.ActivationType;
 import Neural.NN2;
 import Neural.NeuralNet;
 
@@ -10,12 +9,14 @@ import java.awt.*;
 import com.physmo.toolbox.BasicDisplay;
 import com.physmo.toolbox.BasicGraph;
 
+import Activations.ActivationType;
+
 public class TestNeuralNet {
 
 	public static void main(String[] args) {
 		//testBasic();
 		//testSin();
-		//testSinNN2();
+		testSinNN2();
 		//testMapping();
 		
 		//TestBinaryClassifier testBC = new TestBinaryClassifier();
@@ -27,8 +28,8 @@ public class TestNeuralNet {
 		//TestRecurrent testRecurrent = new TestRecurrent();
 		//testRecurrent.run();
 		
-		TestRecurrentNN2 testRecurrent = new TestRecurrentNN2();
-		testRecurrent.run();
+//		TestRecurrentNN2 testRecurrent = new TestRecurrentNN2();
+//		testRecurrent.run();
 	}
 
 	public static void testMapping() {
@@ -126,20 +127,19 @@ public class TestNeuralNet {
 	
 	public static void testSinNN2() {
 		BasicDisplay display = new BasicDisplay(640, 480);
-		BasicGraph graphError = new BasicGraph(20000);
+		BasicGraph graphError = new BasicGraph(2000);
 		NN2 net = new NN2()
 				.addLayer(1)
-				.activationType(ActivationType.TANH)
-				.addLayer(10)
-				.activationType(ActivationType.TANH)
-//				.addLayer(10)
-//				.activationType(ActivationType.TANH)
-//				.addLayer(10)
-//				.activationType(ActivationType.TANH)
+				.activationType(ActivationType.SIGMOID)
+				.addLayer(50)
+				.activationType(ActivationType.SIGMOID)
 				.addLayer(1)
-				.activationType(ActivationType.TANH)
-				.randomizeWeights(-2, 2)
-				.learningRate(0.015);
+				.activationType(ActivationType.NONE)
+				.randomizeWeights(-0.2, 0.2)
+				.inputMapping(1, 0)
+				.outputMapping(1, 0)
+				.learningRate(0.015)
+				.dampenValue(0.15);
 				
 //		net.buildNet("1 4 1");
 //		net.randomiseAllWeights(-2, 2);
@@ -149,14 +149,17 @@ public class TestNeuralNet {
 		
 		for (int i=0;i<50000000;i++) {
 			for (int e=0;e<10;e++) {
-				double rnd = Math.random()*9.00;
+				double rnd = Math.random()*6.00;
 				double res = function(rnd);
 				
 				net.setInputValue(0, rnd);
 				net.setOutputTargetValue(0, res);
-				net.run(true); 
+				net.feedForward();
+				net.backpropogate();
 				//net.learn();
 			}
+			
+			net.learn();
 			
 			//net.applyWeightDeltas(); 
 				
@@ -174,8 +177,10 @@ public class TestNeuralNet {
 				double error=0;
 				for (int x=0;x<300;x++) {
 					net.setInputValue(0, (double)x/50.0);
-					net.run(false);
 					net.setOutputTargetValue(0, function((double)x/50.0));
+					//net.run(false);
+					net.feedForward();
+					
 					error+=net.getCombinedError();
 					y = transformGraphValue(0);
 					display.setDrawColor(Color.gray);
@@ -190,9 +195,13 @@ public class TestNeuralNet {
 				
 				// fixme
 //				net.drawNetwork(display, 330, 20, 300, 200);
-//				graphError.addData(error/300.0);
-//				graphError.draw(display, 20, 170, 300, 300, Color.gray);
+				graphError.addData(error/300.0);
+				graphError.draw(display, 20, 170, 300, 300, Color.gray);
 				
+				
+				double newLearningRate = (Math.abs(error)/300.0)*0.1;
+				if (newLearningRate>0.01) newLearningRate=0.01;
+				net.learningRate(newLearningRate);
 				
 //				for (int j=0; j<net.numConnections; j++) {
 //					int w = 200+(int)(net.getWeight(j)*25.0);

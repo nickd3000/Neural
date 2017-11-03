@@ -1,14 +1,16 @@
 package Neural;
 
-class NodeLayer {
-	int size;
-	int layerId;
-	ActivationType activationType;
+import Activations.ActivationType;
+
+public class NodeLayer {
+	public int size;
+	public int layerId;
+	public ActivationType activationType;
 	
-	double [] values;
-	double [] derivatives;
-	double [] targets;
-	double [] errors;
+	public double [] values;
+	public double [] derivatives;
+	public double [] targets;
+	public double [] errors;
 	
 	public NodeLayer(int size, int layerId) {
 		this.size=size;

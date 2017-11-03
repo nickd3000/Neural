@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import com.physmo.toolbox.BasicDisplay;
 import com.physmo.toolbox.BasicGraph;
 
-import Neural.ActivationType;
+import Activations.ActivationType;
 import Neural.NN2;
 import Neural.NeuralNet;
 
@@ -28,27 +28,35 @@ public class TestRecurrentNN2 {
 	BasicGraph scoreGraph = null;
 	double learningError = 0;
 	
+	public static void main(String[] args) {
+		TestRecurrentNN2 test = new TestRecurrentNN2();
+		test.run();
+	}
+	
 	public void run() {
 		bd = new BasicDisplay(320, 240); 
 		scoreGraph = new BasicGraph(100);
 		
 		//String book = loadTextFile("fox.txt");
-		String book = loadTextFile("sherlock.txt");
+		//String book = loadTextFile("sherlock.txt");
 		//String book = loadTextFile("sphynx.txt");
 		//String book = loadTextFile("abcd.txt");
-		//String book = loadTextFile("wiki.txt");
+		String book = loadTextFile("wiki.txt");
 		
 		if (book.length()>0) System.out.println(book.substring(0, 200));
-		
+		double lr = 0.01;
 		NN2 net = new NN2()
 				.addLayer(charRange+midLayerSize+2)
 				.activationType(ActivationType.TANH)
 				.addLayer(midLayerSize)
 				.activationType(ActivationType.TANH)
+				.addLayer(midLayerSize)
+				.activationType(ActivationType.TANH)
 				.addLayer(charRange)
-				.activationType(ActivationType.RELU)
+				.activationType(ActivationType.TANH)
 				.randomizeWeights(-0.1, 0.1)
-				.learningRate(0.001);
+				.learningRate(lr)
+				.dampenValue(0.15);
 		
 //		String buildStr = ""+(charRange+midLayerSize+2)+" "+midLayerSize+" 100 100 "+charRange;
 //		net.buildNet(buildStr); //"286 60 256");
@@ -61,8 +69,13 @@ public class TestRecurrentNN2 {
 
 		for (int m=0;m<80000;m++) {
 			
-			for (int i=0;i<5;i++) {
-				learn(net, book, 200); // 2
+			for (int i=0;i<25;i++) {
+				learn(net, book, 25); // 2
+			}
+			
+			if (m%100==0) {
+				lr*=0.95;
+				net.learningRate(lr);
 			}
 			
 			if (System.currentTimeMillis()-lastUpdate>1000) {
@@ -93,10 +106,12 @@ public class TestRecurrentNN2 {
 			setExpectedOutputFromChar(net, outChar);
 			copyInnerLayerToInput(net, midLayerSize, charRange);
 			
-			net.run(true);
+			//net.run(true);
 			//net.learn();
-			//learningError += net.errorTotal;
 			learningError += net.getCombinedError();
+			//learningError += net.getCombinedError();
+			net.feedForward();
+			net.backpropogate();
 			
 //			uncommitted++;
 //			if (uncommitted>=deltaCount) {
@@ -106,6 +121,7 @@ public class TestRecurrentNN2 {
 			
 			charPos++;
 		}
+		net.learn();
 	}
 
 	public void generateOutput(NN2 net, int size) {
@@ -115,7 +131,8 @@ public class TestRecurrentNN2 {
 		for (int i=0;i<size;i++) {
 			setInputFromChar(net, prevChar);
 			copyInnerLayerToInput(net, midLayerSize, charRange);
-			net.run(false);
+			//net.run(false);
+			net.feedForward();
 			
 			prevChar = getOutputChar(net);
 			System.out.print(prevChar);

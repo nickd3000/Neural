@@ -1,6 +1,6 @@
 package Neural;
 
-class WeightLayer {
+public class WeightLayer {
 	int size;
 	NodeLayer sourceNodeLayer = null;
 	NodeLayer targetNodeLayer = null;

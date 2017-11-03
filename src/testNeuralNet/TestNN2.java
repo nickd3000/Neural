@@ -1,29 +1,34 @@
 package testNeuralNet;
 
+import java.awt.Color;
 import java.text.DecimalFormat;
 
-import Neural.ActivationType;
+import com.physmo.toolbox.BasicDisplay;
+import com.physmo.toolbox.BasicGraph;
+
+import Activations.ActivationType;
 import Neural.NN2;
 
 public class TestNN2 {
 	static DecimalFormat doubleFormat = new DecimalFormat("#.00"); 
+	BasicDisplay bd = new BasicDisplay(400,400);
+	BasicGraph graph = new BasicGraph(400);
 	
 	public static void main(String[] args) {
-		basicTest();
+		TestNN2 app = new TestNN2();
+		app.basicTest();
 	}
 
-	public static void basicTest() {
+	public void basicTest() {
 		NN2 nn2 = new NN2()
 				.addLayer(2)
-				.activationType(ActivationType.NONE)
+				.activationType(ActivationType.RELU)
 				.addLayer(2)
-				.activationType(ActivationType.TANH)
-				.addLayer(20)
-				.activationType(ActivationType.TANH)
+				.activationType(ActivationType.RELU)
 				.addLayer(2)
-				.activationType(ActivationType.TANH)
+				.activationType(ActivationType.RELU)
 				.randomizeWeights(-0.9, 0.9)
-				.learningRate(0.1);
+				.learningRate(0.01).dampenValue(0.9);
 		
 		nn2.setInputValue(0, 1);
 		nn2.setInputValue(1, 0);
@@ -32,7 +37,7 @@ public class TestNN2 {
 		
 		System.out.println(nn2.toString());
 		
-		for (int i=0;i<200;i++) {
+		for (int i=0;i<400;i++) {
 			if (Math.random()>0.5) {
 				nn2.setInputValue(0, 1);
 				nn2.setInputValue(1, 0);
@@ -49,6 +54,12 @@ public class TestNN2 {
 			
 			nn2.run(true);
 			System.out.println("error: "+doubleFormat.format(nn2.getCombinedError()));
+			
+			graph.addData(nn2.getCombinedError());
+			bd.cls(Color.white);
+			graph.draw(bd, 1, 1, 400, 400, null);
+			
+			bd.refresh();
 		}
 		
 		
