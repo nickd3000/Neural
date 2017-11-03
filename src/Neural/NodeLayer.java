@@ -25,6 +25,9 @@ public class NodeLayer {
 	public void clearValues() {
 		for (int i=0;i<values.length;i++) {
 			values[i]=0;
+			derivatives[i]=0;
+			errors[i]=0;
+			
 		}
 	}
 	

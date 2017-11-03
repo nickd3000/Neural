@@ -42,11 +42,11 @@ public class TestBinaryClassifierNN2 {
 				.activationType(ActivationType.TANH)
 				.addLayer(10)
 				.activationType(ActivationType.TANH)
-//				.addLayer(10)
-//				.activationType(ActivationType.TANH)
+				.addLayer(10)
+				.activationType(ActivationType.TANH)
 				.addLayer(1)
-				.activationType(ActivationType.NONE)
-				.learningRate(0.0013)
+				.activationType(ActivationType.TANH)
+				.learningRate(0.013)
 				.dampenValue(0.1951)
 				.randomizeWeights(-0.1, 0.1)
 				.inputMapping(1, 0)
@@ -58,7 +58,7 @@ public class TestBinaryClassifierNN2 {
 //		net.buildNet("2 2 2 1");
 //		net.learningRate=0.00013;
 //		net.momentum=0.45;
-		initData(Shape.SQUAREHOLE);
+		initData(Shape.BLOBS);
 		int batch=0;
 		int batchSize=100;
 

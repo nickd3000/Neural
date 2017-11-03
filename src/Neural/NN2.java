@@ -286,8 +286,8 @@ public class NN2 {
 	public void resetBiasNode(NodeLayer nl) {
 		int numNodes = nl.size;
 		nl.values[numNodes-1]=1.0f;
-		nl.errors[numNodes-1]=0.0f;
-		nl.derivatives[numNodes-1]=1.0f;
+		//nl.errors[numNodes-1]=1.0f;
+		//nl.derivatives[numNodes-1]=0.0f;
 	}
 	
 	public double mapValue(double val, double scale, double shift) {

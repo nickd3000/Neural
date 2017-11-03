@@ -38,10 +38,10 @@ public class TestRecurrentNN2 {
 		scoreGraph = new BasicGraph(100);
 		
 		//String book = loadTextFile("fox.txt");
-		//String book = loadTextFile("sherlock.txt");
+		String book = loadTextFile("sherlock.txt");
 		//String book = loadTextFile("sphynx.txt");
 		//String book = loadTextFile("abcd.txt");
-		String book = loadTextFile("wiki.txt");
+		//String book = loadTextFile("wiki.txt");
 		
 		if (book.length()>0) System.out.println(book.substring(0, 200));
 		double lr = 0.01;
@@ -69,7 +69,7 @@ public class TestRecurrentNN2 {
 
 		for (int m=0;m<80000;m++) {
 			
-			for (int i=0;i<25;i++) {
+			for (int i=0;i<15;i++) {
 				learn(net, book, 25); // 2
 			}
 			
