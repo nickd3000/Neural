@@ -1,0 +1,5 @@
+com/physmo/neural/activations/ActivationType.class
+com/physmo/neural/activations/Relu.class
+com/physmo/neural/activations/Softmax.class
+com/physmo/neural/activations/Activation.class
+com/physmo/neural/NodeLayer.class
