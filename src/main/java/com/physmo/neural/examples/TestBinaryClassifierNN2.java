@@ -14,33 +14,22 @@ public class TestBinaryClassifierNN2 {
 
     public static final double learningRate = 0.001;
     public static final double dampenValue = 0.599;
-
+    static int numPoints = 500;
     NN2Renderer nn2Renderer = null;
-
-    public static void main(String[] args) {
-        TestBinaryClassifierNN2 bc = new TestBinaryClassifierNN2();
-        bc.run();
-    }
-
-    enum Shape {SQUARE, HALF, SQUAREHOLE, BLOBS, RINGS}
-
-    class DataPoint {
-        public double x, y, v;
-    }
-
     Color colBackground = new Color(0x31333E);
     Color colDataPointOn = new Color(0xEFFF60);
     Color colDataPointOff = new Color(0x40493F);
     Color colMatrixOn = new Color(0x4A7B9D);
     Color colMatrixOff = new Color(0x54577C);
     Color colMatrixMid = new Color(0x44476C);
-
-    static int numPoints = 500;
     DataPoint[] data = new DataPoint[numPoints];
     NN2 net = null;
-
     BasicDisplay display = new BasicDisplayAwt(800, 600);
 
+    public static void main(String[] args) {
+        TestBinaryClassifierNN2 bc = new TestBinaryClassifierNN2();
+        bc.run();
+    }
 
     public void run() {
 
@@ -81,10 +70,9 @@ public class TestBinaryClassifierNN2 {
                 net.setInputValue(1, data[d].y);//, -1, 1);
                 net.setOutputTargetValue(0, data[d].v);//, -1, 1);
 
-                if (method==0) {
+                if (method == 0) {
                     net.run(true);
-                }
-                else {
+                } else {
 
                     net.feedForward();
                     net.backpropogate();
@@ -136,7 +124,6 @@ public class TestBinaryClassifierNN2 {
             }
         }
     }
-
 
     public void initData(Shape shape) {
         double x, y;
@@ -239,5 +226,11 @@ public class TestBinaryClassifierNN2 {
                 display.drawFilledRect(dx + xo, dy + yo, (int) (step * drawScale), (int) (step * drawScale));
             }
         }
+    }
+
+    enum Shape {SQUARE, HALF, SQUAREHOLE, BLOBS, RINGS}
+
+    class DataPoint {
+        public double x, y, v;
     }
 }

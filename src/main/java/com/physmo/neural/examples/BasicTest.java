@@ -7,10 +7,10 @@ import java.text.DecimalFormat;
 
 public class BasicTest {
 
+    public static double[] inputs = {0.2, 0.4, 0.6, 0.8};
+    public static double[] outputs = {0.2, 0.9, 0.8, 0.6};
+    public static double[] calculated = {0, 0, 0, 0};
     static DecimalFormat doubleFormat = new DecimalFormat("#.00");
-    public static double[] inputs = {0.2, 0.4, 0.6,0.8};
-    public static double[] outputs = {0.2, 0.9, 0.8,0.6};
-    public static double[] calculated = {0,0,0,0};
 
     public static void main(String args[]) {
 
@@ -50,7 +50,9 @@ public class BasicTest {
 
     public static String displaySummary(NN2 net) {
         String lst = "";
-        for (double s : calculated) {lst+=String.format("%.3f ", s);}
+        for (double s : calculated) {
+            lst += String.format("%.3f ", s);
+        }
 
         String str = String.format(
                 "Error: %.3f output: %s",

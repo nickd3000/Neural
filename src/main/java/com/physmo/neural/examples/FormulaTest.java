@@ -14,115 +14,115 @@ import java.awt.*;
 public class FormulaTest {
 
 
-	public static final double learningRate = 0.01;
-	public static final double dampenValue = 0.9;
+    public static final double learningRate = 0.01;
+    public static final double dampenValue = 0.9;
 
-	public static void main(String[] args) {
-		testFormula();
-	}
-
-	
-	public static void testFormula() {
-		BasicDisplay display = new BasicDisplayAwt(640, 480);
-		BasicGraph graphError = new BasicGraph(2000);
+    public static void main(String[] args) {
+        testFormula();
+    }
 
 
-		ActivationType att = ActivationType.TANH;
-		NN2 net = new NN2()
-				.addLayer(1,att)
-				.addLayer(5,att)
-				.addLayer(1,att)
-				.randomizeWeights(-0.2, 0.2)
-				.inputMapping(1, 0)
-				.outputMapping(1, 0)
-				.learningRate(learningRate)
-				.dampenValue(dampenValue);
+    public static void testFormula() {
+        BasicDisplay display = new BasicDisplayAwt(640, 480);
+        BasicGraph graphError = new BasicGraph(2000);
 
-		NN2Renderer nn2renderer = new NN2Renderer(net,display,330, 20, 300, 200);
 
-		display.startTimer();
-		
-		for (int i=0;i<50000000;i++) {
-			for (int e=0;e<10;e++) {
-				double rnd = Math.random()*6.00;
-				double res = function(rnd);
-				
-				net.setInputValue(0, rnd);
-				net.setOutputTargetValue(0, res);
-				net.feedForward();
-				net.backpropogate();
-				//net.calculateLearningDeltas();
-			}
-			
-			net.learn();
-			
-			//net.applyWeightDeltas(); 
-				
-			//System.out.println("Out1:" + net.getOutput(0) + " Out2:" + net.getOutput(1));
-			
+        ActivationType att = ActivationType.TANH;
+        NN2 net = new NN2()
+                .addLayer(1, att)
+                .addLayer(5, att)
+                .addLayer(1, att)
+                .randomizeWeights(-0.2, 0.2)
+                .inputMapping(1, 0)
+                .outputMapping(1, 0)
+                .learningRate(learningRate)
+                .dampenValue(dampenValue);
 
-			//if (every(i,100)) {
-			if (display.getEllapsedTime()>1000/30)
-			{
-				display.startTimer();
-				
-				net.run(false);
-				display.cls(new Color(25, 61, 101));
-				int y=0;
-				double error=0;
-				for (int x=0;x<300;x++) {
-					net.setInputValue(0, (double)x/50.0);
-					net.setOutputTargetValue(0, function((double)x/50.0));
-					//net.run(false);
-					net.feedForward();
-					
-					error+=net.getCombinedError();
-					y = transformGraphValue(0);
-					display.setDrawColor(Color.gray);
-					display.drawRect(x, y, x+2, y+2);
-					y = transformGraphValue(function((double)x/50.0));
-					display.setDrawColor(new Color(48, 155, 156));
-					display.drawRect(x, y, x+2, y+2);
-					y = transformGraphValue(net.getOutputValue(0));
-					display.setDrawColor(new Color(193, 190, 89));
-					display.drawRect(x, y, x+2, y+2);
-				}
-				
-				// Draw network.
-				nn2renderer.draw();
+        NN2Renderer nn2renderer = new NN2Renderer(net, display, 330, 20, 300, 200);
 
-				graphError.addData(error/300.0);
-				graphError.draw(display, 20, 170, 300, 300, Color.gray);
+        display.startTimer();
 
-				//System.out.println("Iterations:" + i + " \tError: " + error/300.0);
-				display.refresh();
-				//net.learningRate = Math.abs(error)/300.0;
-			}
-		}
-	}
-	public static double function(double x) {
-		//return (x-1)/5;
-		//return Math.tanh(x);
-		double val = (Math.sin(x*1)*0.4 + (Math.sin(x*2)*0.4)) + (Math.sin(x*5)*0.2);
-		//return (Math.cos(x)*0.5)+0.5;
-		//if (val<0) val=-0.5;
-		//if (val>0) val=0.5;
-		return val;
-	}
-	
-	public static int transformGraphValue(double val) {
-		val = (val+1.0)*50.0;
-		int ret = (int)val;
-		if (ret<0) ret=5;
-		if (ret>200) ret=195;
-		ret+=25;
-		return ret;
-	}
-	
-	public static boolean every(int x, int i) {
-		if (x==0) return true;
-		if (x%i==0) return true;
-		return false;
-	}
+        for (int i = 0; i < 50000000; i++) {
+            for (int e = 0; e < 10; e++) {
+                double rnd = Math.random() * 6.00;
+                double res = function(rnd);
+
+                net.setInputValue(0, rnd);
+                net.setOutputTargetValue(0, res);
+                net.feedForward();
+                net.backpropogate();
+                //net.calculateLearningDeltas();
+            }
+
+            net.learn();
+
+            //net.applyWeightDeltas();
+
+            //System.out.println("Out1:" + net.getOutput(0) + " Out2:" + net.getOutput(1));
+
+
+            //if (every(i,100)) {
+            if (display.getEllapsedTime() > 1000 / 30) {
+                display.startTimer();
+
+                net.run(false);
+                display.cls(new Color(25, 61, 101));
+                int y = 0;
+                double error = 0;
+                for (int x = 0; x < 300; x++) {
+                    net.setInputValue(0, (double) x / 50.0);
+                    net.setOutputTargetValue(0, function((double) x / 50.0));
+                    //net.run(false);
+                    net.feedForward();
+
+                    error += net.getCombinedError();
+                    y = transformGraphValue(0);
+                    display.setDrawColor(Color.gray);
+                    display.drawRect(x, y, x + 2, y + 2);
+                    y = transformGraphValue(function((double) x / 50.0));
+                    display.setDrawColor(new Color(48, 155, 156));
+                    display.drawRect(x, y, x + 2, y + 2);
+                    y = transformGraphValue(net.getOutputValue(0));
+                    display.setDrawColor(new Color(193, 190, 89));
+                    display.drawRect(x, y, x + 2, y + 2);
+                }
+
+                // Draw network.
+                nn2renderer.draw();
+
+                graphError.addData(error / 300.0);
+                graphError.draw(display, 20, 170, 300, 300, Color.gray);
+
+                //System.out.println("Iterations:" + i + " \tError: " + error/300.0);
+                display.refresh();
+                //net.learningRate = Math.abs(error)/300.0;
+            }
+        }
+    }
+
+    public static double function(double x) {
+        //return (x-1)/5;
+        //return Math.tanh(x);
+        double val = (Math.sin(x * 1) * 0.4 + (Math.sin(x * 2) * 0.4)) + (Math.sin(x * 5) * 0.2);
+        //return (Math.cos(x)*0.5)+0.5;
+        //if (val<0) val=-0.5;
+        //if (val>0) val=0.5;
+        return val;
+    }
+
+    public static int transformGraphValue(double val) {
+        val = (val + 1.0) * 50.0;
+        int ret = (int) val;
+        if (ret < 0) ret = 5;
+        if (ret > 200) ret = 195;
+        ret += 25;
+        return ret;
+    }
+
+    public static boolean every(int x, int i) {
+        if (x == 0) return true;
+        if (x % i == 0) return true;
+        return false;
+    }
 }
 
