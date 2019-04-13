@@ -10,13 +10,15 @@ import java.util.List;
 public class NN2 {
 
     private static final String NEWLINE = "\n";
-    List<NodeLayer> nodeLayers = new ArrayList<NodeLayer>();
-    List<WeightLayer> weightLayers = new ArrayList<WeightLayer>();
-    double learningRate = 0.1;
-    double dampenValue = 0.95;
-    double inputScale = 1, inputShift = 0;
-    double outputScale = 1, outputShift = 0;
-    double combinedError = 0;
+    final List<NodeLayer> nodeLayers = new ArrayList<>();
+    final List<WeightLayer> weightLayers = new ArrayList<>();
+    private double learningRate = 0.1;
+    private double dampenValue = 0.95;
+    private double inputScale = 1;
+    private double inputShift = 0;
+    private double outputScale = 1;
+    private double outputShift = 0;
+    private double combinedError = 0;
 
     public NN2() {
 
@@ -64,7 +66,7 @@ public class NN2 {
     }
 
     public NN2 dampenValue(double value) {
-        this.dampenValue = dampenValue;
+        this.dampenValue = value;
         return this;
     }
 
@@ -189,9 +191,9 @@ public class NN2 {
 
         int w = 0;
 
-        for (int sv = 0; sv < sourceValues.length; sv++) {
+        for (double sourceValue : sourceValues) {
             for (int tv = 0; tv < targetValues.length; tv++) {
-                targetValues[tv] += sourceValues[sv] * weights[w++];
+                targetValues[tv] += sourceValue * weights[w++];
             }
         }
     }
@@ -208,9 +210,9 @@ public class NN2 {
         wl.sourceNodeLayer.clearErrors();
 
         for (int sv = 0; sv < sourceErrors.length; sv++) {
-            for (int tv = 0; tv < targetErrors.length; tv++) {
+            for (double targetError : targetErrors) {
                 //targetValues[tv]+=sourceValues[sv]*weights[w++];
-                sourceErrors[sv] += sourceDerivatives[sv] * weights[w++] * targetErrors[tv];
+                sourceErrors[sv] += sourceDerivatives[sv] * weights[w++] * targetError;
             }
         }
 
@@ -256,12 +258,17 @@ public class NN2 {
 
         int w = 0;
 
-        for (int sv = 0; sv < sourceErrors.length; sv++) {
-            for (int tv = 0; tv < targetErrors.length; tv++) {
-                //double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
-                weights[w] += deltas[w];
-                w++;
-            }
+//        for (int sv = 0; sv < sourceErrors.length; sv++) {
+//            for (int tv = 0; tv < targetErrors.length; tv++) {
+//                //double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
+//
+//                weights[w] += deltas[w];
+//
+//                w++;
+//            }
+//        }
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] += deltas[i];
         }
     }
 
@@ -272,19 +279,19 @@ public class NN2 {
         nl.storePreviousValues_experimental();
     }
 
-    public void calculateLayerDerivatives(NodeLayer nl) {
+    private void calculateLayerDerivatives(NodeLayer nl) {
         nl.activationType.getInstance().CalculateDerivative(nl);
     }
 
     // derivatives are required before this is executed.
-    public void calculateLayerErrors(NodeLayer nl) {
+    private void calculateLayerErrors(NodeLayer nl) {
         for (int i = 0; i < nl.values.length; i++) {
             double e = nl.targets[i] - nl.values[i];
             nl.errors[i] = e;// * nl.derivatives[i];
         }
     }
 
-    public double sumLayerError(NodeLayer nl) {
+    private double sumLayerError(NodeLayer nl) {
         double sum = 0;
         for (int i = 0; i < nl.values.length; i++) {
             sum += Math.abs(nl.errors[i]);
@@ -292,18 +299,18 @@ public class NN2 {
         return sum;
     }
 
-    public void resetBiasNode(NodeLayer nl) {
+    private void resetBiasNode(NodeLayer nl) {
         int numNodes = nl.size;
         nl.values[numNodes - 1] = 1.0f;
         //nl.errors[numNodes-1]=1.0f;
         //nl.derivatives[numNodes-1]=0.0f;
     }
 
-    public double mapValue(double val, double scale, double shift) {
+    private double mapValue(double val, double scale, double shift) {
         return (val * scale) + shift;
     }
 
-    public double unmapValue(double val, double scale, double shift) {
+    private double unmapValue(double val, double scale, double shift) {
         return (val / scale) + shift;
     }
 }

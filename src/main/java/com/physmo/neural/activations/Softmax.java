@@ -11,16 +11,19 @@ class Softmax implements Activation {
 		double max = -100;
 		// add all outputs.
 		for (int i=0;i<nl.size;i++) {
-			double val = nl.values[i];
-			val = Math.abs(val);
-			sum += Math.exp(val);
-			if (val>max) max=val;
+			//double val = nl.values[i];
+			nl.values[i] = nl.values[i] * nl.values[i];
+			//val = Math.abs(val);
+			//sum += Math.exp(val);
+			//if (val>max) max=val;
+			sum += nl.values[i];
 		}
-		
+		if (sum<0.001) sum=0.001;
 		// scale outputs by sum?
 		for (int i=0;i<nl.size;i++) {
-			double val = nl.values[i];
-			nl.values[i]=(Math.exp(val))/sum;			
+			//double val = nl.values[i];
+			//nl.values[i]=(Math.exp(val))/sum;
+			nl.values[i] = nl.values[i] / sum;
 		}
 	}
 

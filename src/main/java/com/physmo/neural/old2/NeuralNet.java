@@ -1,10 +1,8 @@
-package com.physmo.neural.old;
+package com.physmo.neural.old2;
 
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.LookupTable;
-import com.physmo.neural.old.Link;
-import com.physmo.neural.old.Node;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -209,7 +207,7 @@ public class NeuralNet {
 		clearValues(true);
 		setBiasNodes();
 		propogateForward();
-		if (this.softmaxOutput==true) softmaxOutput();
+		if (this.softmaxOutput) softmaxOutput();
 		errorTotal = calculateOutputError();
 	}
 	
@@ -397,7 +395,7 @@ public class NeuralNet {
 	public void clearValues(boolean skipFirstLayer) {
 		
 		for (int l = 0; l<numLayers;l++) {
-			if (l==0 && skipFirstLayer==true) continue;
+			if (l==0 && skipFirstLayer) continue;
 			
 			int numNodesInLayer = layerSizes.get(l);
 			int nodeOffset = nodeOffsets.get(l);

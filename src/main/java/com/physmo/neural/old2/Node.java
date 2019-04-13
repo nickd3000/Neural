@@ -1,4 +1,4 @@
-package com.physmo.neural.old;
+package com.physmo.neural.old2;
 
 class Node {
 	double value;

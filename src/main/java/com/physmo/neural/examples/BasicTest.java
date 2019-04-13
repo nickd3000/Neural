@@ -8,19 +8,20 @@ import java.text.DecimalFormat;
 public class BasicTest {
 
     static DecimalFormat doubleFormat = new DecimalFormat("#.00");
-    public static double[] inputs = {0.5, 0.2, 0.4};
-    public static double[] outputs = {0.15, 0.72, 0.24};
+    public static double[] inputs = {0.2, 0.4, 0.6,0.8};
+    public static double[] outputs = {0.2, 0.9, 0.8,0.6};
+    public static double[] calculated = {0,0,0,0};
 
     public static void main(String args[]) {
+
+        ActivationType activationType = ActivationType.TANH;
+
         NN2 nn2 = new NN2()
-                .addLayer(1,ActivationType.SIGMOID)
-                .activationType(ActivationType.SIGMOID)
-                .addLayer(3,ActivationType.SIGMOID)
-                .activationType(ActivationType.SIGMOID)
-                .addLayer(1,ActivationType.SIGMOID)
-                .activationType(ActivationType.SIGMOID)
+                .addLayer(1, activationType)
+                .addLayer(3, activationType)
+                .addLayer(1, activationType)
                 .randomizeWeights(-0.9, 0.9)
-                .learningRate(0.01).dampenValue(0.9);
+                .learningRate(0.001).dampenValue(0.9);
 
         double errorTotal = 0;
 
@@ -33,12 +34,14 @@ public class BasicTest {
                 nn2.setInputValue(0, inputs[k]);
                 nn2.setOutputTargetValue(0, outputs[k]);
                 nn2.run(true);
+                calculated[k] = nn2.getOutputValue(0);
+
                 errorTotal += nn2.getCombinedError();
             }
 
             if (every(i, 1000)) System.out.println(displaySummary(nn2));
 
-            if (errorTotal < 0.001) {
+            if (errorTotal < 0.01) {
                 //System.out.println(displaySummary(net));
                 break;
             }
@@ -46,10 +49,13 @@ public class BasicTest {
     }
 
     public static String displaySummary(NN2 net) {
+        String lst = "";
+        for (double s : calculated) {lst+=String.format("%.3f ", s);}
+
         String str = String.format(
-                "Error: %.3f output: %f.3",
+                "Error: %.3f output: %s",
                 net.getCombinedError(),
-                net.getOutputValue(0));
+                lst);
         //System.out.println("Error: " + net.errorTotal + "output:" + net.getOutput(0, 0, 1));
         return str;
     }

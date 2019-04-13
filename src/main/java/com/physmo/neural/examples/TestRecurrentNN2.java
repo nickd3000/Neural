@@ -3,7 +3,6 @@ package com.physmo.neural.examples;
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.neural.activations.ActivationType;
 import com.physmo.neural.NN2;
-import com.physmo.neural.NeuralNet;
 import com.physmo.minvio.BasicDisplayAwt;
 import com.physmo.minvio.BasicGraph;
 
@@ -17,7 +16,7 @@ import java.nio.file.Paths;
 // 
 public class TestRecurrentNN2 {
 	private static final char GENERATION_SEED_CHAR = ' ';
-	static int midLayerSize = 100 ; // 50
+	static int midLayerSize = 25; //200 ; // 50
 	static int charRange=95;
 	static boolean skipCopy = false;
 	static double scaleMin=-0.95;
@@ -39,18 +38,20 @@ public class TestRecurrentNN2 {
 		scoreGraph = new BasicGraph(100);
 		
 		//String book = loadTextFile("fox.txt");
-		String book = loadTextFile("sherlock.txt");
+		//String book = loadTextFile("sherlock.txt");
 		//String book = loadTextFile("sphynx.txt");
 		//String book = loadTextFile("abcd.txt");
-		//String book = loadTextFile("wiki.txt");
+		String book = loadTextFile("wiki.txt");
 		
 		if (book.length()>0) System.out.println(book.substring(0, 200));
-		double lr = 0.01; // 0.01
+		double lr = 0.001; // 0.01
 		NN2 net = new NN2()
 				.addLayer(charRange+midLayerSize+2,ActivationType.TANH)
 				.addLayer(midLayerSize,ActivationType.TANH)
 				.addLayer(midLayerSize,ActivationType.TANH)
-				.addLayer(charRange,ActivationType.SOFTMAX)
+				.addLayer(midLayerSize,ActivationType.TANH)
+				.addLayer(midLayerSize,ActivationType.TANH)
+				.addLayer(charRange,ActivationType.TANH)
 				.randomizeWeights(-0.1, 0.1)
 				.learningRate(lr)
 				.dampenValue(0.999515);
@@ -67,7 +68,7 @@ public class TestRecurrentNN2 {
 		for (int m=0;m<80000;m++) {
 			
 			for (int i=0;i<15;i++) {
-				learn(net, book, 250); // 2
+				learn(net, book, 50); //250); // 2
 			}
 			
 			if (m%100==0) {
@@ -82,6 +83,7 @@ public class TestRecurrentNN2 {
 				
 				bd.cls(Color.white);
 				scoreGraph.draw(bd, 10, 10, 300, 200, null);
+				bd.drawText("LR="+lr,20,200);
 				bd.refresh();
 			}
 		}
@@ -109,10 +111,12 @@ public class TestRecurrentNN2 {
 			//net.calculateLearningDeltas();
 			
 			//learningError += net.getCombinedError();
+
 			net.feedForward();
 			net.backpropogate();
 			learningError += net.getCombinedError();
-			
+			net.learn();
+
 //			uncommitted++;
 //			if (uncommitted>=deltaCount) {
 //				net.applyWeightDeltas(); 
@@ -149,7 +153,7 @@ public class TestRecurrentNN2 {
 		//mergeOutputToInput(net);
 		
 		if (skipCopy) return;
-		double range = scaleMax;;
+		double range = scaleMax;
 		for (int i=0;i<numInnerNodes;i++) {
 			//double val = net.getInnerValue(1, i, -range, range);
 			double val = net.getInnerValue(1, i);
@@ -159,18 +163,7 @@ public class TestRecurrentNN2 {
 			net.setInputValue(i+inputNodeOffset, val); //, scaleMin,scaleMax);
 		}
 	}
-	
-	public void mergeOutputToInput(NeuralNet net) {
-		int outputLayer = 3;
-		int numOutputNodes = charRange;
-		double range = scaleMax;;
-		for (int i=0;i<numOutputNodes;i++) {
-			double val = net.getInnerValue(outputLayer, i, -range, range);
-			val = Math.max(0, val);
-			double inp = net.getInnerValue(0, i, -range, range);
-			net.setInput(i+0, val+inp, scaleMin,scaleMax);
-		}
-	}
+
 	
 	public char getOutputChar(NN2 net) {
 		return getOutputCharWeighted(net);
