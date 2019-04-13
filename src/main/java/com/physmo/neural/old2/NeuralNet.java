@@ -1,8 +1,10 @@
-package com.physmo.neural;
+package com.physmo.neural.old;
 
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.LookupTable;
+import com.physmo.neural.old.Link;
+import com.physmo.neural.old.Node;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,8 +27,8 @@ public class NeuralNet {
 	public double learningRate = 0.025;
 	public double momentum = 0.99; //0.4
 	
-	public Link [] links;
-	Node [] nodes;
+	public Link[] links;
+	Node[] nodes;
 	double [] targetValues;
 	
 	public int numConnections = 0;
@@ -47,7 +49,7 @@ public class NeuralNet {
 	public NeuralNet() {
 	}
 		
-	public void buildNet(String structure) {
+	public void buildNetXXX(String structure) {
 		
 		// Init maths lookup tables.
 		DoubleUnaryOperator dl = (x) -> {return Math.tanh(x);};

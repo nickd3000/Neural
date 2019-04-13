@@ -1,5 +1,6 @@
 package com.physmo.neural.examples;
 
+import com.physmo.neural.NN2Renderer;
 import com.physmo.neural.activations.ActivationType;
 import com.physmo.neural.NN2;
 import com.physmo.neural.NeuralNet;
@@ -15,7 +16,7 @@ public class TestNeuralNet {
 		// [*] testBasic();
 
 		//testSin();
-		//testSinNN2();
+		testSinNN2();
 		//testMapping();
 		
 //		TestBinaryClassifier testBC = new TestBinaryClassifier();
@@ -30,14 +31,14 @@ public class TestNeuralNet {
 //		TestRecurrentNN2 testRecurrent = new TestRecurrentNN2();
 //		testRecurrent.run();
 	}
-
-	public static void testMapping() {
-		NeuralNet net = new NeuralNet();
-		System.out.println("mapValue(-1,-1,1): " + net.mapValue(-1, -1, 1));
-		System.out.println("mapValue(1,-1,1): " + net.mapValue(1, -1, 1));
-		System.out.println("unmapValue(0.1,-1,1): " + net.unmapValue(0.1, -1, 1));
-		System.out.println("unmapValue(0.9,-1,1): " + net.unmapValue(0.9, -1, 1));
-	}
+//
+//	public static void testMapping() {
+//		NeuralNet net = new NeuralNet();
+//		System.out.println("mapValue(-1,-1,1): " + net.mapValue(-1, -1, 1));
+//		System.out.println("mapValue(1,-1,1): " + net.mapValue(1, -1, 1));
+//		System.out.println("unmapValue(0.1,-1,1): " + net.unmapValue(0.1, -1, 1));
+//		System.out.println("unmapValue(0.9,-1,1): " + net.unmapValue(0.9, -1, 1));
+//	}
 	
 //	public static void testBasic() {
 //		NeuralNet net = new NeuralNet();
@@ -127,15 +128,12 @@ public class TestNeuralNet {
 	public static void testSinNN2() {
 		BasicDisplay display = new BasicDisplayAwt(640, 480);
 		BasicGraph graphError = new BasicGraph(2000);
+		ActivationType att = ActivationType.TANH;
 		NN2 net = new NN2()
-				.addLayer(1,ActivationType.TANH)
-				.activationType(ActivationType.TANH)
-				.addLayer(15,ActivationType.TANH)
-				.activationType(ActivationType.TANH)
-				.addLayer(15,ActivationType.TANH)
-				.activationType(ActivationType.TANH)
-				.addLayer(1,ActivationType.TANH)
-				.activationType(ActivationType.TANH)
+				.addLayer(1,att)
+				.addLayer(4,att)
+				.addLayer(4,att)
+				.addLayer(1,att)
 				.randomizeWeights(-0.2, 0.2)
 				.inputMapping(1, 0)
 				.outputMapping(1, 0)
@@ -196,6 +194,9 @@ public class TestNeuralNet {
 				
 				// fixme
 //				net.drawNetwork(display, 330, 20, 300, 200);
+				NN2Renderer nn2renderer = new NN2Renderer(net,display,330, 20, 300, 200);
+				nn2renderer.draw();
+
 				graphError.addData(error/300.0);
 				graphError.draw(display, 20, 170, 300, 300, Color.gray);
 				
