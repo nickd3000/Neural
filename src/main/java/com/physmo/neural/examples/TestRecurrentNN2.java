@@ -8,7 +8,9 @@ import com.physmo.neural.activations.ActivationType;
 
 import java.awt.*;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 // add function to copy hidden layer to inputs (with an offset)
@@ -24,11 +26,11 @@ public class TestRecurrentNN2 {
     static int deltaCount = 1; // 1 number of learnings to combine for inertia
     static double randomAmount = 0.010;
     double learningError = 0;
-
+    boolean dynamicLearningRate = false;
 
     static int midLayerSize = 50; //200 ; // 50
     static double learningRate = 0.001; // 0.01
-    static double dampenValue = 0.2; // 0.6
+    static double dampenValue = 0.52; // 0.6
 
 
     BasicDisplay bd = null;
@@ -44,10 +46,10 @@ public class TestRecurrentNN2 {
         scoreGraph = new BasicGraph(100);
 
         //String book = loadTextFile("fox.txt");
-        String book = loadTextFile("sherlock.txt");
+        //String book = loadTextFile("sherlock.txt");
         //String book = loadTextFile("sphynx.txt");
         //String book = loadTextFile("abcd.txt");
-        //String book = loadTextFile("wiki.txt");
+        String book = loadTextFile("wiki.txt");
 
         if (book.length() > 0) System.out.println(book.substring(0, 200));
 
@@ -79,7 +81,8 @@ public class TestRecurrentNN2 {
                 learn(net, book, 50); //250); // 2
             }
 
-            if (m % 100 == 0) {
+
+            if (dynamicLearningRate && m % 100 == 0) {
                 learningRate *= 0.97;
                 net.learningRate(learningRate);
             }
@@ -277,7 +280,10 @@ public class TestRecurrentNN2 {
     public String loadTextFile(String fileName) {
         String content = "";
         try {
-            content = new String(Files.readAllBytes(Paths.get(fileName)));
+            final URL resource = TestRecurrentNN2.class.getClassLoader().getResource(fileName);
+            Path path = Paths.get(resource.getPath());
+            content = new String(Files.readAllBytes(path));
+            //content = new String(Files.readAllBytes(Paths.get(fileName)));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

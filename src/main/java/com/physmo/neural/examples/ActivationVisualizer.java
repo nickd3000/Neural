@@ -7,7 +7,7 @@ import com.physmo.neural.activations.ActivationType;
 
 import java.awt.*;
 
-public class ActivationTest {
+public class ActivationVisualizer {
     Color colBackground = new Color(7, 23, 29);
     Color colBorder = new Color(120, 120, 120);
     Color colAxes = new Color(100, 100, 100);
@@ -15,7 +15,7 @@ public class ActivationTest {
     Color colDer = new Color(100, 100, 200);
 
     public static void main(String[] args) {
-        ActivationTest app = new ActivationTest();
+        ActivationVisualizer app = new ActivationVisualizer();
         app.run();
     }
 

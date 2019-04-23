@@ -3,25 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="bb38688e-6b32-4bd0-8585-8accb4241ec6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2Renderer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2Renderer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/WeightLayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/WeightLayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Activation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Activation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/ActivationType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/ActivationType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Linear.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Linear.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/None.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/None.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Relu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Relu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Sigmoid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Sigmoid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Softmax.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Softmax.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Tanh.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Tanh.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Neural.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Neural.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/abcd.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/abcd.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/fox.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/fox.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/raw_u8_pcm_00.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/raw_u8_pcm_00.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/raw_u8_pcm_01.raw" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/raw_u8_pcm_01.raw" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sherlock.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sherlock.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sphynx.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/sphynx.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationVisualizer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifierNN2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifierNN2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Link.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Link.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/NeuralNet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/NeuralNet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Node.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Node.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wiki.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/wiki.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../minvio/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../minvio/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicDisplayAwt.java" beforeDir="false" afterPath="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicDisplayAwt.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java" afterDir="false" />
@@ -55,14 +49,14 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="62" />
+          <entry key="JAVA" value="67" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="XML" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="3465" />
+          <entry key="JAVA" value="4019" />
           <entry key="PLAIN_TEXT" value="11" />
           <entry key="XML" value="1" />
         </counts>
@@ -74,11 +68,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/NeuralNet.java">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="20" selection-start-line="20" selection-end-line="20" />
+            <state relative-caret-position="215">
+              <caret line="100" column="79" selection-start-line="100" selection-start-column="79" selection-end-line="100" selection-end-column="79" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1140">
+              <caret line="60" column="48" selection-start-line="60" selection-start-column="48" selection-end-line="60" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -89,8 +95,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="55">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="-944">
+              <caret line="231" column="17" selection-start-line="231" selection-start-column="17" selection-end-line="231" selection-end-column="17" />
               <folding>
                 <element signature="e#8015#8016#0" expanded="true" />
                 <element signature="e#8086#8087#0" expanded="true" />
@@ -106,7 +112,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifierNN2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
+            <state relative-caret-position="1083">
               <caret line="57" column="28" selection-start-line="57" selection-start-column="28" selection-end-line="57" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -116,42 +122,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Link.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="38">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Node.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="13" selection-start-line="13" selection-end-line="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/pom.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="32" column="12" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/sphynx.txt">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="27" column="48" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
+            <state relative-caret-position="163">
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -159,11 +133,35 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationVisualizer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-65">
+              <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="177">
+              <caret line="22" column="8" lean-forward="true" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="298">
-              <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+            <state relative-caret-position="274">
+              <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -174,8 +172,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/NodeLayer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="261">
+            <state relative-caret-position="351">
               <caret line="50" column="8" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/WeightLayer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -223,20 +230,21 @@
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Sigmoid.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifier.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java" />
-        <option value="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/activations/Softmax.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2Renderer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNeuralNet.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/NeuralNet.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/NeuralNet.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifierNN2.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/NodeLayer.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationVisualizer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java" />
+        <option value="$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java" />
       </list>
     </option>
   </component>
@@ -271,6 +279,36 @@
       <pane id="ProjectPane">
         <subPane>
           <expand>
+            <path>
+              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="minvio" type="462c0819:PsiDirectoryNode" />
+            </path>
             <path>
               <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
               <item name="Neural" type="462c0819:PsiDirectoryNode" />
@@ -314,11 +352,8 @@
               <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
               <item name="Neural" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Neural" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -368,7 +403,7 @@
     <property name="Downloaded.Files.Path.Enabled" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555161163613" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556039561501" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/physmo/neural" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ToolBox/src/ToolBox" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -381,6 +416,9 @@
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.physmo.neural" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -395,7 +433,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.TestRecurrentNN2">
+  <component name="RunManager">
     <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="" />
       <option name="DEPLOY" value="true" />
@@ -504,6 +542,20 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ActivationVisualizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.physmo.neural.examples.ActivationVisualizer" />
+      <module name="Neural" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.physmo.neural.examples.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="BasicTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.physmo.neural.examples.BasicTest" />
       <module name="Neural" />
@@ -548,20 +600,6 @@
     </configuration>
     <configuration name="TestNN2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.physmo.neural.examples.TestNN2" />
-      <module name="Neural" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.physmo.neural.examples.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="TestRecurrentNN2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.physmo.neural.examples.TestRecurrentNN2" />
       <module name="Neural" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -639,18 +677,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.BasicTest" />
-      <item itemvalue="Application.TestRecurrentNN2" />
       <item itemvalue="Application.FormulaTest" />
       <item itemvalue="Application.TestNN2" />
       <item itemvalue="Application.TestBinaryClassifierNN2" />
+      <item itemvalue="Application.ActivationVisualizer" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.TestRecurrentNN2" />
+        <item itemvalue="Application.FormulaTest" />
+        <item itemvalue="Application.ActivationVisualizer" />
         <item itemvalue="Application.TestBinaryClassifierNN2" />
         <item itemvalue="Application.TestNN2" />
         <item itemvalue="Application.BasicTest" />
-        <item itemvalue="Application.FormulaTest" />
       </list>
     </recent_temporary>
   </component>
@@ -672,8 +710,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="2" y="23" width="1427" height="828" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20654546" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.248" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="UI Designer" order="3" />
@@ -683,7 +722,7 @@
       <window_info anchor="bottom" id="Inspection Results" weight="0.30543932" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32937685" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.21896791" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.18549512" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39910978" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -691,7 +730,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info anchor="bottom" id="Event Log" order="8" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Messages" order="10" weight="0.32937685" />
+      <window_info anchor="bottom" id="Messages" order="10" weight="0.24965133" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -749,16 +788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
           <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="68" column="37" selection-start-line="68" selection-start-column="37" selection-end-line="68" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -821,16 +850,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="26" column="48" selection-start-line="26" selection-start-column="48" selection-end-line="26" selection-end-column="48" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestAudio.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="174">
@@ -861,35 +880,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1254">
-          <caret line="75" column="16" lean-forward="true" selection-start-line="75" selection-start-column="16" selection-end-line="75" selection-end-column="16" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#496#497#0" expanded="true" />
-            <element signature="e#516#517#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/WeightLayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/old2/Link.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="38">
@@ -914,10 +904,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="32" column="12" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/sphynx.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/BasicTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="163">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestBinaryClassifierNN2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
+        <state relative-caret-position="1083">
           <caret line="57" column="28" selection-start-line="57" selection-start-column="28" selection-end-line="57" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="177">
+          <caret line="22" column="8" lean-forward="true" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -926,8 +956,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/NN2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="-944">
+          <caret line="231" column="17" selection-start-line="231" selection-start-column="17" selection-end-line="231" selection-end-column="17" />
           <folding>
             <element signature="e#8015#8016#0" expanded="true" />
             <element signature="e#8086#8087#0" expanded="true" />
@@ -941,35 +971,42 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/NodeLayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
+        <state relative-caret-position="351">
           <caret line="50" column="8" selection-start-line="50" selection-start-column="8" selection-end-line="50" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/WeightLayer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="32" column="12" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+        <state relative-caret-position="38">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/sphynx.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestNN2.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/ActivationVisualizer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="27" column="48" selection-start-line="27" selection-start-column="48" selection-end-line="27" selection-end-column="48" />
+        <state relative-caret-position="-65">
+          <caret line="9" column="33" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/TestRecurrentNN2.java">
+    <entry file="file://$PROJECT_DIR$/../minvio/src/main/java/com/physmo/minvio/BasicGraph.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="28" column="32" selection-start-line="28" selection-start-column="32" selection-end-line="28" selection-end-column="32" />
+        <state relative-caret-position="1140">
+          <caret line="60" column="48" selection-start-line="60" selection-start-column="48" selection-end-line="60" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/physmo/neural/examples/FormulaTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="215">
+          <caret line="100" column="79" selection-start-line="100" selection-start-column="79" selection-end-line="100" selection-end-column="79" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

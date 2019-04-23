@@ -172,7 +172,7 @@ public class NN2 {
     // STEP 3
     public void learn() {
         for (WeightLayer wl : weightLayers) {
-            adjustWeights(wl);
+            applyDeltasToWeights(wl);
         }
     }
 
@@ -249,24 +249,12 @@ public class NN2 {
     }
 
     // Adjust weights using deltas.
-    private void adjustWeights(WeightLayer wl) {
+    private void applyDeltasToWeights(WeightLayer wl) {
         double[] weights = wl.weights;
         double[] deltas = wl.deltas;
-        double[] sourceErrors = wl.sourceNodeLayer.errors;
-        double[] targetErrors = wl.targetNodeLayer.errors;
-        double[] sourceValues = wl.sourceNodeLayer.values;
 
         int w = 0;
 
-//        for (int sv = 0; sv < sourceErrors.length; sv++) {
-//            for (int tv = 0; tv < targetErrors.length; tv++) {
-//                //double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
-//
-//                weights[w] += deltas[w];
-//
-//                w++;
-//            }
-//        }
         for (int i = 0; i < weights.length; i++) {
             weights[i] += deltas[i];
         }
@@ -287,7 +275,7 @@ public class NN2 {
     private void calculateLayerErrors(NodeLayer nl) {
         for (int i = 0; i < nl.values.length; i++) {
             double e = nl.targets[i] - nl.values[i];
-            nl.errors[i] = e;// * nl.derivatives[i];
+            nl.errors[i] = e;
         }
     }
 
@@ -302,8 +290,6 @@ public class NN2 {
     private void resetBiasNode(NodeLayer nl) {
         int numNodes = nl.size;
         nl.values[numNodes - 1] = 1.0f;
-        //nl.errors[numNodes-1]=1.0f;
-        //nl.derivatives[numNodes-1]=0.0f;
     }
 
     private double mapValue(double val, double scale, double shift) {

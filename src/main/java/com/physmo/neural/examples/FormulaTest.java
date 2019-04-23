@@ -9,13 +9,12 @@ import com.physmo.neural.activations.ActivationType;
 
 import java.awt.*;
 
-// Test learning a function.
-
+// Test learning a curve.
 public class FormulaTest {
 
 
     public static final double learningRate = 0.01;
-    public static final double dampenValue = 0.9;
+    public static final double dampenValue = 0.1; //0.0059;
 
     public static void main(String[] args) {
         testFormula();
@@ -44,24 +43,18 @@ public class FormulaTest {
 
         for (int i = 0; i < 50000000; i++) {
             for (int e = 0; e < 10; e++) {
-                double rnd = Math.random() * 6.00;
-                double res = function(rnd);
 
-                net.setInputValue(0, rnd);
-                net.setOutputTargetValue(0, res);
+                double functionInput = Math.random() * 6.00;
+                double functionResult = function(functionInput);
+
+                net.setInputValue(0, functionInput);
+                net.setOutputTargetValue(0, functionResult);
                 net.feedForward();
                 net.backpropogate();
-                //net.calculateLearningDeltas();
             }
 
             net.learn();
 
-            //net.applyWeightDeltas();
-
-            //System.out.println("Out1:" + net.getOutput(0) + " Out2:" + net.getOutput(1));
-
-
-            //if (every(i,100)) {
             if (display.getEllapsedTime() > 1000 / 30) {
                 display.startTimer();
 
@@ -82,9 +75,16 @@ public class FormulaTest {
                     y = transformGraphValue(function((double) x / 50.0));
                     display.setDrawColor(new Color(48, 155, 156));
                     display.drawRect(x, y, x + 2, y + 2);
+
                     y = transformGraphValue(net.getOutputValue(0));
-                    display.setDrawColor(new Color(193, 190, 89));
-                    display.drawRect(x, y, x + 2, y + 2);
+                    //display.setDrawColor(new Color(193, 190, 89));
+                    //display.drawRect(x, y, x + 2, y + 2);
+                    drawGraphPoint(display,x,y,new Color(193, 190, 89));
+
+                    for (int k=0;k<5;k++) {
+                        y = transformGraphValue(net.getInnerValue(1, k));
+                        drawGraphPoint(display, x, y, display.getDistinctColor(k, 0.5));
+                    }
                 }
 
                 // Draw network.
@@ -93,18 +93,23 @@ public class FormulaTest {
                 graphError.addData(error / 300.0);
                 graphError.draw(display, 20, 170, 300, 300, Color.gray);
 
-                //System.out.println("Iterations:" + i + " \tError: " + error/300.0);
                 display.refresh();
-                //net.learningRate = Math.abs(error)/300.0;
             }
         }
     }
+
+    public static void drawGraphPoint(BasicDisplay bd, int x, int y, Color c) {
+        bd.setDrawColor(c);
+        bd.drawRect(x, y, x + 1, y + 1);
+    }
+
 
     public static double function(double x) {
         //return (x-1)/5;
         //return Math.tanh(x);
         double val = (Math.sin(x * 1) * 0.4 + (Math.sin(x * 2) * 0.4)) + (Math.sin(x * 5) * 0.2);
         //return (Math.cos(x)*0.5)+0.5;
+        //return (Math.cos(x*5)*0.5)+0.5;
         //if (val<0) val=-0.5;
         //if (val>0) val=0.5;
         return val;
