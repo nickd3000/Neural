@@ -5,9 +5,20 @@
       <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__minvio_minvio_0_0_1_SNAPSHOT.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Neural.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Neural.iml" afterDir="false" />
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/../minvio/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../minvio/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+=======
+      <change beforePath="$PROJECT_DIR$/target/classes/abcd.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/fox.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/raw_u8_pcm_00.raw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/raw_u8_pcm_01.raw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sherlock.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sphynx.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/wiki.txt" beforeDir="false" />
+    </list>
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +27,13 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
   <component name="FavoritesManager">
     <favorites_list name="Neural" />
   </component>
@@ -43,13 +61,26 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectId" id="1QLQSol6eQFljMAgWWjR4sFkXJJ" />
+=======
+  <component name="ProjectId" id="1W1dqLxc20jfEiNxrBMpNO4ZEJq" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
   <component name="PropertiesComponent">
     <property name="Downloaded.Files.Path.Enabled" value="false" />
     <property name="Repository.Attach.JavaDocs" value="false" />
     <property name="Repository.Attach.Sources" value="false" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+<<<<<<< HEAD
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556039599733" />
+=======
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556039561501" />
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/main/java/com/physmo/neural" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../ToolBox/src/ToolBox" />
     <property name="project.structure.last.edited" value="Modules" />
@@ -67,6 +98,7 @@
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
   </component>
+<<<<<<< HEAD
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -80,6 +112,15 @@
     </option>
   </component>
   <component name="RunManager" selected="Application.TestRecurrentNN2">
+=======
+  <component name="RunManager" selected="Application.BasicTest">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
     <configuration default="true" type="JUnitTestDiscovery" factoryName="JUnit Test Discovery" changeList="All">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -129,7 +170,11 @@
       <listeners />
       <method />
     </configuration>
+<<<<<<< HEAD
     <configuration default="true" type="AndroidRunConfigurationType">
+=======
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
       <option name="DEPLOY_AS_INSTANT" value="false" />
@@ -159,7 +204,11 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+<<<<<<< HEAD
     <configuration default="true" type="AndroidTestRunConfigurationType">
+=======
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
       <option name="TESTING_TYPE" value="0" />
       <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
       <option name="METHOD_NAME" value="" />
@@ -180,6 +229,7 @@
         <option name="STARTUP_CPU_PROFILING_ENABLED" value="false" />
         <option name="STARTUP_CPU_PROFILING_CONFIGURATION_NAME" value="Sample Java Methods" />
       </Profilers>
+<<<<<<< HEAD
       <method v="2">
         <option name="Make" enabled="true" />
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
@@ -187,8 +237,11 @@
     </configuration>
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+=======
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
       <method v="2">
         <option name="Make" enabled="true" />
+        <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="ActivationVisualizer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -335,13 +388,33 @@
     </list>
     <recent_temporary>
       <list>
+<<<<<<< HEAD
         <item itemvalue="Application.TestRecurrentNN2" />
         <item itemvalue="Application.TestNN2" />
         <item itemvalue="Application.TestBinaryClassifierNN2" />
         <item itemvalue="Application.ActivationVisualizer" />
         <item itemvalue="Application.BasicTest" />
+=======
+        <item itemvalue="Application.BasicTest" />
+        <item itemvalue="Application.FormulaTest" />
+        <item itemvalue="Application.ActivationVisualizer" />
+        <item itemvalue="Application.TestBinaryClassifierNN2" />
+        <item itemvalue="Application.TestNN2" />
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
       </list>
     </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
   </component>
   <component name="StructureViewFactory">
     <option name="ACTIVE_ACTIONS" value=",SHOW_FIELDS,SHOW_NON_PUBLIC" />
@@ -359,6 +432,7 @@
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -370,6 +444,8 @@
       </map>
     </option>
   </component>
+=======
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
       <collection />
@@ -378,6 +454,15 @@
       <collection />
     </option>
   </component>
+<<<<<<< HEAD
+=======
+  <component name="WindowStateProjectService">
+    <state x="493" y="271" key="com.intellij.ide.util.TipDialog" timestamp="1578321242289">
+      <screen x="0" y="23" width="1600" height="831" />
+    </state>
+    <state x="493" y="271" key="com.intellij.ide.util.TipDialog/0.23.1600.831@0.23.1600.831" timestamp="1578321242289" />
+  </component>
+>>>>>>> 4088bfc0d6b6c080b3c92a0f11a30fc6b027e51d
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
