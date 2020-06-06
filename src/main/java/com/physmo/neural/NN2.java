@@ -148,9 +148,7 @@ public class NN2 {
             activateLayer(wl.targetNodeLayer);
         }
 
-        for (NodeLayer nl : nodeLayers) {
-            calculateLayerDerivatives(nl);
-        }
+        nodeLayers.forEach((nl) -> calculateLayerDerivatives(nl));
 
         calculateLayerErrors(getLastNodeLayer());
         combinedError = sumLayerError(getLastNodeLayer());
@@ -171,9 +169,7 @@ public class NN2 {
 
     // STEP 3
     public void learn() {
-        for (WeightLayer wl : weightLayers) {
-            applyDeltasToWeights(wl);
-        }
+        weightLayers.forEach((wl) -> applyDeltasToWeights(wl));
     }
 
 
