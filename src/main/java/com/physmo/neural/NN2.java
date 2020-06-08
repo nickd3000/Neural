@@ -295,4 +295,21 @@ public class NN2 {
     private double unmapValue(double val, double scale, double shift) {
         return (val / scale) + shift;
     }
+
+    public void setWeightsFromArray(double [] weights) {
+        int count = 0;
+        for (WeightLayer wl : weightLayers) {
+            for (int i=0;i<wl.size;i++) {
+                wl.weights[i] = weights[count++];
+            }
+        }
+    }
+
+    public int getNumberOfWeights() {
+        int count = 0;
+        for (WeightLayer wl : weightLayers) {
+            count += wl.size;
+        }
+        return count;
+    }
 }
