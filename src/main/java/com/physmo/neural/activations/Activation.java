@@ -3,7 +3,10 @@ package com.physmo.neural.activations;
 import com.physmo.neural.NodeLayer;
 
 public interface Activation {
-    void CalculateActivation(NodeLayer nl);
+    double Activate(Double value);
+    double Derivative(Double value);
 
-    void CalculateDerivative(NodeLayer nl);
+    void LayerActivation(NodeLayer nl);
+
+    void LayerDerivative(NodeLayer nl);
 }

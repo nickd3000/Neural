@@ -2,10 +2,19 @@ package com.physmo.neural.activations;
 
 import com.physmo.neural.NodeLayer;
 
+// TODO: this activation requires more work, can't be done purely as single functions
 class Softmax implements Activation {
+    @Override
+    public double Activate(Double value) {
+        return 0;
+    }
 
     @Override
-    public void CalculateActivation(NodeLayer nl) {
+    public double Derivative(Double value) {
+        return 0;
+    }
+    @Override
+    public void LayerActivation(NodeLayer nl) {
 
         double sum = 0;
         double max = -100;
@@ -28,7 +37,7 @@ class Softmax implements Activation {
     }
 
     @Override
-    public void CalculateDerivative(NodeLayer nl) {
+    public void LayerDerivative(NodeLayer nl) {
         for (int i = 0; i < nl.size; i++) {
             nl.derivatives[i] = nl.values[i] * (1.0 - nl.values[i]);
         }

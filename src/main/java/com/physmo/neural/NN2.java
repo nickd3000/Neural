@@ -35,6 +35,9 @@ public class NN2 {
             requiredWeights = lastLayer.size * size;
         }
 
+        // RNN add an extra weight to each node
+        //requiredWeights+=(size-1);
+
         NodeLayer newNodeLayer = new NodeLayer(size, newLayerId);
         newNodeLayer.activationType = actTp;
 
@@ -101,7 +104,10 @@ public class NN2 {
         return unmapValue(getLastNodeLayer().values[i], outputScale, outputShift);
         //return getLastNodeLayer().derivatives[i];
     }
-
+    public double getOutputValueRaw(int i) {
+        return getLastNodeLayer().values[i];
+        //return getLastNodeLayer().derivatives[i];
+    }
     public double getInnerValue(int layer, int node) {
         NodeLayer nl = nodeLayers.get(layer);
         return nl.values[node];
@@ -180,6 +186,7 @@ public class NN2 {
     private void propogateLayerPair(WeightLayer wl) {
 
         wl.targetNodeLayer.clearValues();
+        //wl.targetNodeLayer.addPreviousValues_experimental(); // instead of clearing, copy previous iterations value.
 
         double[] sourceValues = wl.sourceNodeLayer.values;
         double[] targetValues = wl.targetNodeLayer.values;
@@ -192,6 +199,8 @@ public class NN2 {
                 targetValues[tv] += sourceValue * weights[w++];
             }
         }
+
+        //wl.targetNodeLayer.storePreviousValues_experimental();
     }
 
     private void backPropogateLayerPair(WeightLayer wl) {
@@ -207,8 +216,8 @@ public class NN2 {
 
         for (int sv = 0; sv < sourceErrors.length; sv++) {
             for (double targetError : targetErrors) {
-                //targetValues[tv]+=sourceValues[sv]*weights[w++];
-                sourceErrors[sv] += sourceDerivatives[sv] * weights[w++] * targetError;
+                // NJD: commented out sourceDerivatives and binary classifier did not break...
+                sourceErrors[sv] += /* sourceDerivatives[sv] * */ weights[w++] * targetError;
             }
         }
 
@@ -258,13 +267,13 @@ public class NN2 {
 
 
     private void activateLayer(NodeLayer nl) {
-        nl.addPreviousValues_experimental();
-        nl.activationType.getInstance().CalculateActivation(nl);
+        //nl.addPreviousValues_experimental();
+        nl.activationType.getInstance().LayerActivation(nl);
         nl.storePreviousValues_experimental();
     }
 
     private void calculateLayerDerivatives(NodeLayer nl) {
-        nl.activationType.getInstance().CalculateDerivative(nl);
+        nl.activationType.getInstance().LayerDerivative(nl);
     }
 
     // derivatives are required before this is executed.

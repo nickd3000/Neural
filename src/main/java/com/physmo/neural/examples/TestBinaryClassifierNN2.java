@@ -18,7 +18,7 @@ public class TestBinaryClassifierNN2 {
     NN2Renderer nn2Renderer = null;
     Color colBackground = new Color(0x31333E);
     Color colDataPointOn = new Color(0xEFFF60);
-    Color colDataPointOff = new Color(0x40493F);
+    Color colDataPointOff = new Color(0x3F4449);
     Color colMatrixOn = new Color(0x4A7B9D);
     Color colMatrixOff = new Color(0x54577C);
     Color colMatrixMid = new Color(0x44476C);
@@ -51,6 +51,8 @@ public class TestBinaryClassifierNN2 {
         nn2Renderer = new NN2Renderer(net, display, 430, 10, 350, 300);
 
         BasicGraph graphError = new BasicGraph(2000);
+
+        display.setFont(12);
 
 //		net.buildNet("2 2 2 1");
 //		net.learningRate=0.00013;
@@ -116,11 +118,11 @@ public class TestBinaryClassifierNN2 {
                 nn2Renderer.draw();
 
                 display.setDrawColor(Color.WHITE);
-                display.drawText("Iteration  " + i, 10, 555);
-                display.drawText("Error  " + error, 10, 570);
+                display.drawText("Iteration  " + i, 10, 560);
+                display.drawText("Error  " + error, 10, 580);
                 //display.drawText("Learning rate  "+net.learningRate, 10, 585);
 
-                display.refresh();
+                display.repaint(30);
             }
         }
     }

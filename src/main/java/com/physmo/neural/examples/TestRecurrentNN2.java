@@ -28,9 +28,9 @@ public class TestRecurrentNN2 {
     double learningError = 0;
     boolean dynamicLearningRate = false;
 
-    static int midLayerSize = 50; //200 ; // 50
+    static int midLayerSize = 500; //200 ; // 50
     static double learningRate = 0.001; // 0.01
-    static double dampenValue = 0.52; // 0.6
+    static double dampenValue = 0.51; // 0.6
 
 
     BasicDisplay bd = null;
@@ -46,10 +46,10 @@ public class TestRecurrentNN2 {
         scoreGraph = new BasicGraph(100);
 
         //String book = loadTextFile("fox.txt");
-        //String book = loadTextFile("sherlock.txt");
+        String book = loadTextFile("sherlock.txt");
         //String book = loadTextFile("sphynx.txt");
         //String book = loadTextFile("abcd.txt");
-        String book = loadTextFile("wiki.txt");
+        //String book = loadTextFile("wiki.txt");
 
         if (book.length() > 0) System.out.println(book.substring(0, 200));
 
@@ -60,8 +60,7 @@ public class TestRecurrentNN2 {
                 .addLayer(midLayerSize, ActivationType.TANH)
                 .addLayer(midLayerSize, ActivationType.TANH)
                 .addLayer(midLayerSize, ActivationType.TANH)
-                .addLayer(midLayerSize, ActivationType.TANH)
-                .addLayer(charRange, ActivationType.TANH)
+                .addLayer(charRange, ActivationType.LINEAR)
                 .randomizeWeights(-0.1, 0.1)
                 .learningRate(learningRate)
                 .dampenValue(dampenValue);
@@ -78,7 +77,7 @@ public class TestRecurrentNN2 {
         for (int m = 0; m < 80000; m++) {
 
             for (int i = 0; i < 15; i++) {
-                learn(net, book, 50); //250); // 2
+                learn(net, book, 30); //250); // 2
             }
 
 
@@ -95,7 +94,7 @@ public class TestRecurrentNN2 {
                 bd.cls(Color.white);
                 scoreGraph.draw(bd, 10, 10, 300, 200, null);
                 bd.drawText("LR=" + learningRate, 20, 200);
-                bd.refresh();
+                bd.repaint();
             }
         }
     }
@@ -116,7 +115,7 @@ public class TestRecurrentNN2 {
             setExpectedOutputFromChar(net, outChar);
 
             copyInnerLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
-
+            //copyOutputLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
 
             //net.run(true);
             //net.calculateLearningDeltas();
@@ -126,7 +125,7 @@ public class TestRecurrentNN2 {
             net.feedForward();
             net.backpropogate();
             learningError += net.getCombinedError();
-            net.learn();
+            if (i>5) net.learn();
 
 //			uncommitted++;
 //			if (uncommitted>=deltaCount) {
@@ -141,17 +140,22 @@ public class TestRecurrentNN2 {
 
     public void generateOutput(NN2 net, int size) {
         char prevChar = GENERATION_SEED_CHAR;
+        prevChar= (char) ('a'+(char)(Math.random()*20));
+
         System.out.println("Sample output:");
 
         for (int i = 0; i < size; i++) {
+            System.out.print(prevChar);
+
             setInputFromChar(net, prevChar);
 
             copyInnerLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
+            //copyOutputLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
             //net.run(false);
             net.feedForward();
+            char generatedChar = getOutputCharWeighted(net);
+            prevChar = generatedChar;
 
-            prevChar = getOutputChar(net);
-            System.out.print(prevChar);
         }
         System.out.print("\n " + learningError + " ");
 
@@ -165,9 +169,10 @@ public class TestRecurrentNN2 {
 
         if (skipCopy) return;
         double range = scaleMax;
+        int innerLayerIndex = 1;
         for (int i = 0; i < numInnerNodes; i++) {
             //double val = net.getInnerValue(1, i, -range, range);
-            double val = net.getInnerValue(1, i);
+            double val = net.getInnerValue(innerLayerIndex, i);
             //val = Math.max(0, val);
             if (clear) val = 0;
 
@@ -175,21 +180,36 @@ public class TestRecurrentNN2 {
         }
     }
 
+    public void copyOutputLayerToInput(NN2 net, int numInnerNodes, int inputNodeOffset, boolean clear) {
+        //mergeOutputToInput(net);
+
+        if (skipCopy) return;
+        double range = scaleMax;
+        for (int i = 0; i < charRange; i++) {
+            //double val = net.getInnerValue(1, i, -range, range);
+            double val = net.getOutputValue( i);
+            //val = Math.max(0, val);
+            if (clear) val = 0;
+
+            net.setInputValue(i + inputNodeOffset, val); //, scaleMin,scaleMax);
+        }
+    }
 
     public char getOutputChar(NN2 net) {
-        return getOutputCharWeighted(net);
-		/*
+        //return getOutputCharWeighted(net);
+
 		double maxVal=-10;
 		int maxId=0;
-		for (int i=0;i<numChars;i++) {
-			double val = net.getOutput(i, scaleMin, scaleMax);
+		for (int i=0;i<charRange;i++) {
+			double val = Math.abs(net.getOutputValue(i));
+			val +=Math.random() * 0.1;
 			if (val>maxVal) {
 				maxVal = val;
 				maxId=i;
 			}
 		}
 		return (char)mapIntToChar(maxId);
-		*/
+
     }
 
     // version with roulette style weighted selection.
@@ -202,8 +222,9 @@ public class TestRecurrentNN2 {
 
         for (int i = 0; i < charRange; i++) {
             //val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
-            val = Math.max(0, net.getOutputValue(i));
-            softMax += Math.exp(Math.abs(val));
+            //val = Math.max(0, net.getOutputValue(i));
+            val = Math.abs(net.getOutputValue(i));
+            //softMax += Math.exp(Math.abs(val));
             val = val * val * val;
             total += val;
         }
@@ -213,7 +234,8 @@ public class TestRecurrentNN2 {
         double runningTotal = 0, previousRunningTotal = 0;
         for (int i = 0; i < charRange; i++) {
             //val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
-            val = Math.max(0, net.getOutputValue(i));
+            //val = Math.max(0, net.getOutputValue(i));
+            val = Math.abs(net.getOutputValue(i));
             val = val * val * val;
 
             runningTotal += val;

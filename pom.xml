@@ -9,10 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
-            <groupId>com.physmo.minvio</groupId>
+            <groupId>io.github.nickd3000</groupId>
             <artifactId>minvio</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 

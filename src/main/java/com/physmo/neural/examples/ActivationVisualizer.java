@@ -35,7 +35,7 @@ public class ActivationVisualizer {
 
     public void renderActivationFunction(BasicDisplay bd, ActivationType a, int x, int y, int w, int h) {
         bd.setDrawColor(colBorder);
-        bd.drawRect(x, y, x + w, y + h);
+        bd.drawRect(x, y,  w,  h);
         bd.setDrawColor(colAxes);
         bd.drawLine(x, y + h / 2, x + w, y + h / 2);
         bd.drawLine(x + w / 2, y, x + w / 2, y + h);
@@ -52,8 +52,8 @@ public class ActivationVisualizer {
         for (int v1 = 0; v1 < w; v1++) {
             v = (((double) v1 - (w / 2)) / (double) w) * 8.0;
             dummyLayer.values[0] = v;
-            a.getInstance().CalculateActivation(dummyLayer);
-            a.getInstance().CalculateDerivative(dummyLayer);
+            a.getInstance().LayerActivation(dummyLayer);
+            a.getInstance().LayerDerivative(dummyLayer);
             act = clamp(dummyLayer.values[0], -1.5, 1.5);
             der = clamp(dummyLayer.derivatives[0], -1.5, 1.5);
             bd.setDrawColor(colAct);
@@ -66,7 +66,7 @@ public class ActivationVisualizer {
                     (int) (y + (h / 2) - (der * heightScaler)), 2, 2);
         }
 
-        bd.refresh();
+        bd.repaint();
     }
 
     public double clamp(double val, double min, double max) {

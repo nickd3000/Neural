@@ -59,7 +59,7 @@ public class TestNN2 {
             bd.cls(Color.white);
             graph.draw(bd, 1, 1, 400, 400, null);
 
-            bd.refresh();
+            bd.repaint();
         }
 
 

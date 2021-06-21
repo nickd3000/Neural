@@ -29,7 +29,7 @@ public class NodeLayer {
             values[i] = 0;
             derivatives[i] = 0;
             errors[i] = 0;
-            previousValues[i] = 0;
+            //previousValues[i] = 0;
         }
     }
 
@@ -41,8 +41,8 @@ public class NodeLayer {
 
     // see what happens if we just add the previous value back in
     public void addPreviousValues_experimental() {
-        for (double value : values) {
-            //values[i]+=previousValues[i]/50;
+        for (int i = 0; i < values.length; i++) {
+            values[i]+=previousValues[i]*0.01;
 
         }
     }

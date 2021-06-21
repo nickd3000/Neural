@@ -59,7 +59,7 @@ public class FormulaTest {
                 display.startTimer();
 
                 net.run(false);
-                display.cls(new Color(25, 61, 101));
+                display.cls(new Color(15, 41, 69));
                 int y = 0;
                 double error = 0;
                 for (int x = 0; x < 300; x++) {
@@ -71,20 +71,20 @@ public class FormulaTest {
                     error += net.getCombinedError();
                     y = transformGraphValue(0);
                     display.setDrawColor(Color.gray);
-                    display.drawRect(x, y, x + 2, y + 2);
+                    display.drawRect(x, y,  2,  2);
                     y = transformGraphValue(function((double) x / 50.0));
                     display.setDrawColor(new Color(48, 155, 156));
-                    display.drawRect(x, y, x + 2, y + 2);
+                    display.drawRect(x, y,  2,  2);
 
                     y = transformGraphValue(net.getOutputValue(0));
                     //display.setDrawColor(new Color(193, 190, 89));
                     //display.drawRect(x, y, x + 2, y + 2);
                     drawGraphPoint(display,x,y,new Color(193, 190, 89));
 
-                    for (int k=0;k<5;k++) {
-                        y = transformGraphValue(net.getInnerValue(1, k));
-                        drawGraphPoint(display, x, y, display.getDistinctColor(k, 0.5));
-                    }
+//                    for (int k=0;k<5;k++) {
+//                        y = transformGraphValue(net.getInnerValue(1, k));
+//                        drawGraphPoint(display, x, y, display.getDistinctColor(k, 0.5));
+//                    }
                 }
 
                 // Draw network.
@@ -93,14 +93,14 @@ public class FormulaTest {
                 graphError.addData(error / 300.0);
                 graphError.draw(display, 20, 170, 300, 300, Color.gray);
 
-                display.refresh();
+                display.repaint();
             }
         }
     }
 
     public static void drawGraphPoint(BasicDisplay bd, int x, int y, Color c) {
         bd.setDrawColor(c);
-        bd.drawRect(x, y, x + 1, y + 1);
+        bd.drawRect(x, y,  1,  1);
     }
 
 

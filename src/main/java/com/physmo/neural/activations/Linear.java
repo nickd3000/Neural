@@ -5,14 +5,24 @@ import com.physmo.neural.NodeLayer;
 class Linear implements Activation {
 
     @Override
-    public void CalculateActivation(NodeLayer nl) {
+    public double Activate(Double value) {
+        return value;
+    }
+
+    @Override
+    public double Derivative(Double value) {
+        return 1;
+    }
+
+    @Override
+    public void LayerActivation(NodeLayer nl) {
         for (int i = 0; i < nl.size; i++) {
             nl.values[i] = nl.values[i];
         }
     }
 
     @Override
-    public void CalculateDerivative(NodeLayer nl) {
+    public void LayerDerivative(NodeLayer nl) {
         for (int i = 0; i < nl.size; i++) {
             nl.derivatives[i] = 1;
         }
