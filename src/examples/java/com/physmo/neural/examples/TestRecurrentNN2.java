@@ -2,11 +2,11 @@ package com.physmo.neural.examples;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.BasicGraph;
+import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.activations.ActivationType;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -25,14 +25,11 @@ public class TestRecurrentNN2 {
     static double scaleMax = 0.95;
     static int deltaCount = 1; // 1 number of learnings to combine for inertia
     static double randomAmount = 0.010;
+    static int midLayerSize = 500; //200 ; // 50
+    static double learningRate = 0.01; // 0.01
+    static double dampenValue = 0.6; // 0.6
     double learningError = 0;
     boolean dynamicLearningRate = false;
-
-    static int midLayerSize = 500; //200 ; // 50
-    static double learningRate = 0.001; // 0.01
-    static double dampenValue = 0.51; // 0.6
-
-
     BasicDisplay bd = null;
     BasicGraph scoreGraph = null;
 
@@ -46,20 +43,19 @@ public class TestRecurrentNN2 {
         scoreGraph = new BasicGraph(100);
 
         //String book = loadTextFile("fox.txt");
-        String book = loadTextFile("sherlock.txt");
+        //String book = loadTextFile("sherlock.txt");
         //String book = loadTextFile("sphynx.txt");
         //String book = loadTextFile("abcd.txt");
-        //String book = loadTextFile("wiki.txt");
+        String book = loadTextFile("wiki.txt");
 
         if (book.length() > 0) System.out.println(book.substring(0, 200));
-
 
 
         NN2 net = new NN2()
                 .addLayer(charRange + midLayerSize + 2, ActivationType.TANH)
                 .addLayer(midLayerSize, ActivationType.TANH)
-                .addLayer(midLayerSize, ActivationType.TANH)
-                .addLayer(midLayerSize, ActivationType.TANH)
+//                .addLayer(midLayerSize, ActivationType.TANH)
+//                .addLayer(midLayerSize, ActivationType.TANH)
                 .addLayer(charRange, ActivationType.LINEAR)
                 .randomizeWeights(-0.1, 0.1)
                 .learningRate(learningRate)
@@ -77,7 +73,7 @@ public class TestRecurrentNN2 {
         for (int m = 0; m < 80000; m++) {
 
             for (int i = 0; i < 15; i++) {
-                learn(net, book, 30); //250); // 2
+                learn(net, book, 5); //30 250); // 2
             }
 
 
@@ -115,32 +111,22 @@ public class TestRecurrentNN2 {
             setExpectedOutputFromChar(net, outChar);
 
             copyInnerLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
-            //copyOutputLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
-
-            //net.run(true);
-            //net.calculateLearningDeltas();
-
-            //learningError += net.getCombinedError();
 
             net.feedForward();
-            net.backpropogate();
-            learningError += net.getCombinedError();
-            if (i>5) net.learn();
 
-//			uncommitted++;
-//			if (uncommitted>=deltaCount) {
-//				net.applyWeightDeltas(); 
-//				uncommitted=0;
-//			}
+            net.backpropogate();
+
+            learningError += net.getCombinedError();
 
             charPos++;
         }
         net.learn();
+
     }
 
     public void generateOutput(NN2 net, int size) {
         char prevChar = GENERATION_SEED_CHAR;
-        prevChar= (char) ('a'+(char)(Math.random()*20));
+        prevChar = (char) ('a' + (char) (Math.random() * 20));
 
         System.out.println("Sample output:");
 
@@ -187,7 +173,7 @@ public class TestRecurrentNN2 {
         double range = scaleMax;
         for (int i = 0; i < charRange; i++) {
             //double val = net.getInnerValue(1, i, -range, range);
-            double val = net.getOutputValue( i);
+            double val = net.getOutputValue(i);
             //val = Math.max(0, val);
             if (clear) val = 0;
 
@@ -198,18 +184,26 @@ public class TestRecurrentNN2 {
     public char getOutputChar(NN2 net) {
         //return getOutputCharWeighted(net);
 
-		double maxVal=-10;
-		int maxId=0;
-		for (int i=0;i<charRange;i++) {
-			double val = Math.abs(net.getOutputValue(i));
-			val +=Math.random() * 0.1;
-			if (val>maxVal) {
-				maxVal = val;
-				maxId=i;
-			}
-		}
-		return (char)mapIntToChar(maxId);
+        double maxVal = -10;
+        int maxId = 0;
+        for (int i = 0; i < charRange; i++) {
+            double val = Math.abs(net.getOutputValue(i));
+            val += Math.random() * 0.1;
+            if (val > maxVal) {
+                maxVal = val;
+                maxId = i;
+            }
+        }
+        return (char) mapIntToChar(maxId);
 
+    }
+
+    public char mapIntToChar(int i) {
+        if (i < 0) i = 0;
+        if (i > charRange) i = charRange;
+        i += 32;
+
+        return (char) (i);
     }
 
     // version with roulette style weighted selection.
@@ -252,7 +246,6 @@ public class TestRecurrentNN2 {
         return (char) mapIntToChar(maxId);
     }
 
-
     public void setInputFromChar(NN2 net, char c) {
         int ic = mapCharToInt(c);
         for (int i = 0; i < charRange; i++) {
@@ -289,14 +282,6 @@ public class TestRecurrentNN2 {
         if (i >= charRange) i = charRange;
 
         return i;
-    }
-
-    public char mapIntToChar(int i) {
-        if (i < 0) i = 0;
-        if (i > charRange) i = charRange;
-        i += 32;
-
-        return (char) (i);
     }
 
     public String loadTextFile(String fileName) {
