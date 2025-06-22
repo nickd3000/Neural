@@ -1,9 +1,9 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.BasicGraph;
+import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.NN2Renderer;
 import com.physmo.neural.activations.ActivationType;
@@ -39,6 +39,7 @@ public class TestBinaryClassifierNN2 {
                 .addLayer(2, activationType)
                 //.addLayer(30, actType)
                 //.addLayer(50, actType)
+                .addLayer(10, activationType)
                 .addLayer(10, activationType)
                 .addLayer(10, activationType)
                 .addLayer(1, activationType)

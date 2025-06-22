@@ -1,4 +1,4 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.neural.NN2;
 import com.physmo.neural.activations.ActivationType;
@@ -12,7 +12,7 @@ public class BasicTest {
     public static double[] calculated = {0, 0, 0, 0};
     static DecimalFormat doubleFormat = new DecimalFormat("#.00");
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         ActivationType activationType = ActivationType.TANH;
 

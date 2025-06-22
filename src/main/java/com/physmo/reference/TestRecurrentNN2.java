@@ -1,4 +1,4 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
@@ -25,9 +25,9 @@ public class TestRecurrentNN2 {
     static double scaleMax = 0.95;
     static int deltaCount = 1; // 1 number of learnings to combine for inertia
     static double randomAmount = 0.010;
-    static int midLayerSize = 500; //200 ; // 50
-    static double learningRate = 0.01; // 0.01
-    static double dampenValue = 0.6; // 0.6
+    static int midLayerSize = 55; //200 ; // 50
+    static double learningRate = 0.001; // 0.01
+    static double dampenValue = 0.000; // 0.6
     double learningError = 0;
     boolean dynamicLearningRate = false;
     BasicDisplay bd = null;
@@ -43,21 +43,25 @@ public class TestRecurrentNN2 {
         scoreGraph = new BasicGraph(100);
 
         //String book = loadTextFile("fox.txt");
-        //String book = loadTextFile("sherlock.txt");
+        String book = loadTextFile("sherlock.txt");
         //String book = loadTextFile("sphynx.txt");
         //String book = loadTextFile("abcd.txt");
-        String book = loadTextFile("wiki.txt");
+        //String book = loadTextFile("wiki.txt");
 
         if (book.length() > 0) System.out.println(book.substring(0, 200));
 
 
         NN2 net = new NN2()
                 .addLayer(charRange + midLayerSize + 2, ActivationType.TANH)
-                .addLayer(midLayerSize, ActivationType.TANH)
 //                .addLayer(midLayerSize, ActivationType.TANH)
+//                .addLayer(midLayerSize/3, ActivationType.TANH)
+//                .addLayer(midLayerSize/3, ActivationType.TANH)
+//                .addLayer(midLayerSize, ActivationType.RELU)
+//                .addLayer(midLayerSize, ActivationType.RELU)
 //                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.RELU)
                 .addLayer(charRange, ActivationType.LINEAR)
-                .randomizeWeights(-0.1, 0.1)
+                .randomizeWeights(-0.001, 0.01)
                 .learningRate(learningRate)
                 .dampenValue(dampenValue);
 
@@ -73,7 +77,7 @@ public class TestRecurrentNN2 {
         for (int m = 0; m < 80000; m++) {
 
             for (int i = 0; i < 15; i++) {
-                learn(net, book, 5); //30 250); // 2
+                learn(net, book, 10); //30 250); // 2
             }
 
 
@@ -103,6 +107,7 @@ public class TestRecurrentNN2 {
         int uncommitted = 0;
         charPos = (int) (Math.random() * (double) (corpus.length() - batchSize));
         learningError = 0;
+
         for (int i = 0; i < batchSize; i++) {
             inChar = corpus.charAt(charPos);
             outChar = corpus.charAt(charPos + 1);
@@ -110,7 +115,7 @@ public class TestRecurrentNN2 {
             setInputFromChar(net, inChar);
             setExpectedOutputFromChar(net, outChar);
 
-            copyInnerLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
+            copyInnerLayerToInput(net, midLayerSize, charRange, i == 0);
 
             net.feedForward();
 
@@ -119,8 +124,9 @@ public class TestRecurrentNN2 {
             learningError += net.getCombinedError();
 
             charPos++;
+            net.learn();
         }
-        net.learn();
+
 
     }
 
@@ -139,8 +145,8 @@ public class TestRecurrentNN2 {
             //copyOutputLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
             //net.run(false);
             net.feedForward();
-            char generatedChar = getOutputCharWeighted(net);
-            prevChar = generatedChar;
+
+            prevChar = getOutputCharWeighted(net);
 
         }
         System.out.print("\n " + learningError + " ");
@@ -155,7 +161,7 @@ public class TestRecurrentNN2 {
 
         if (skipCopy) return;
         double range = scaleMax;
-        int innerLayerIndex = 1;
+        int innerLayerIndex = 2;
         for (int i = 0; i < numInnerNodes; i++) {
             //double val = net.getInnerValue(1, i, -range, range);
             double val = net.getInnerValue(innerLayerIndex, i);
@@ -188,7 +194,8 @@ public class TestRecurrentNN2 {
         int maxId = 0;
         for (int i = 0; i < charRange; i++) {
             double val = Math.abs(net.getOutputValue(i));
-            val += Math.random() * 0.1;
+            //double val = net.getOutputValue(i);
+            //val += Math.random() * 0.1;
             if (val > maxVal) {
                 maxVal = val;
                 maxId = i;
@@ -206,6 +213,12 @@ public class TestRecurrentNN2 {
         return (char) (i);
     }
 
+    public double transformWeightedValue(double val) {
+        val = (1+val) * (1+val);
+        if (val<1.125) val = 0;
+        return val;
+    }
+
     // version with roulette style weighted selection.
     public char getOutputCharWeighted(NN2 net) {
 
@@ -214,28 +227,21 @@ public class TestRecurrentNN2 {
         double val = 0;
         double softMax = 0;
 
+        // Calculate total of all outputs.
         for (int i = 0; i < charRange; i++) {
-            //val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
-            //val = Math.max(0, net.getOutputValue(i));
             val = Math.abs(net.getOutputValue(i));
-            //softMax += Math.exp(Math.abs(val));
-            val = val * val * val;
-            total += val;
+            total += transformWeightedValue(val);;
         }
 
         double pick = Math.random() * total;
 
         double runningTotal = 0, previousRunningTotal = 0;
         for (int i = 0; i < charRange; i++) {
-            //val=Math.max(0,net.getOutput(i, scaleMin, scaleMax));
-            //val = Math.max(0, net.getOutputValue(i));
             val = Math.abs(net.getOutputValue(i));
-            val = val * val * val;
 
-            runningTotal += val;
-            //runningTotal += (Math.exp(Math.abs(val)))/softMax;
+            runningTotal += transformWeightedValue(val);;
 
-            if (val > 0 && pick >= previousRunningTotal &&
+            if (val > 0 && pick > previousRunningTotal &&
                     pick <= runningTotal) {
                 maxId = i;
                 break;
@@ -252,7 +258,7 @@ public class TestRecurrentNN2 {
             if (i == ic) {
                 net.setInputValue(i, scaleMax); //, scaleMin, scaleMax);
             } else {
-                net.setInputValue(i, 0);//, scaleMin, scaleMax);
+                net.setInputValue(i, 0.1);//, scaleMin, scaleMax);
             }
         }
     }

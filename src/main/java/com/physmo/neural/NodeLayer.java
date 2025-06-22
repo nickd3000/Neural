@@ -2,6 +2,8 @@ package com.physmo.neural;
 
 import com.physmo.neural.activations.ActivationType;
 
+import java.util.Arrays;
+
 public class NodeLayer {
     public int size;
     public int layerId;
@@ -34,9 +36,7 @@ public class NodeLayer {
     }
 
     public void clearErrors() {
-        for (int i = 0; i < errors.length; i++) {
-            errors[i] = 0;
-        }
+        Arrays.fill(errors, 0);
     }
 
     // see what happens if we just add the previous value back in
