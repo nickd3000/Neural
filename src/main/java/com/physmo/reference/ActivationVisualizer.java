@@ -1,4 +1,4 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;

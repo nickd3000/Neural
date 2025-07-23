@@ -1,10 +1,15 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.neural.NN2;
 import com.physmo.neural.activations.ActivationType;
 
 import java.text.DecimalFormat;
 
+/**
+ * The BasicTest class is designed to demonstrate the use of a neural network system (NN2).
+ * The class defines input and output data, runs training iterations, and evaluates the performance of the network.
+ * The neural network consists of multiple layers with specified activation functions and can be trained using backpropagation.
+ */
 public class BasicTest {
 
     public static double[] inputs = {0.2, 0.4, 0.6, 0.8};
@@ -12,7 +17,7 @@ public class BasicTest {
     public static double[] calculated = {0, 0, 0, 0};
     static DecimalFormat doubleFormat = new DecimalFormat("#.00");
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         ActivationType activationType = ActivationType.TANH;
 

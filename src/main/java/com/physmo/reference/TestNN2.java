@@ -1,12 +1,12 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.BasicGraph;
+import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.activations.ActivationType;
 
-import java.awt.*;
+import java.awt.Color;
 import java.text.DecimalFormat;
 
 public class TestNN2 {
@@ -23,11 +23,8 @@ public class TestNN2 {
     public void basicTest() {
         NN2 nn2 = new NN2()
                 .addLayer(2, ActivationType.RELU)
-                .activationType(ActivationType.RELU)
                 .addLayer(2, ActivationType.RELU)
-                .activationType(ActivationType.RELU)
                 .addLayer(2, ActivationType.RELU)
-                .activationType(ActivationType.RELU)
                 .randomizeWeights(-0.9, 0.9)
                 .learningRate(0.01).dampenValue(0.5);
 
@@ -36,7 +33,7 @@ public class TestNN2 {
         nn2.setOutputTargetValue(0, 0);
         nn2.setOutputTargetValue(1, 1);
 
-        System.out.println(nn2.toString());
+        System.out.println(nn2);
 
         for (int i = 0; i < numIterations; i++) {
             if (Math.random() > 0.5) {

@@ -154,14 +154,14 @@ public class NN2 {
             activateLayer(wl.targetNodeLayer);
         }
 
-        nodeLayers.forEach((nl) -> calculateLayerDerivatives(nl));
+        nodeLayers.forEach(this::calculateLayerDerivatives);
 
         calculateLayerErrors(getLastNodeLayer());
         combinedError = sumLayerError(getLastNodeLayer());
     }
 
     // STEP 2
-    // Back propogate and calculate deltas.
+    // Back propagate and calculate deltas.
     public void backpropogate() {
         for (int i = weightLayers.size() - 1; i >= 0; i--) {
             backPropogateLayerPair(weightLayers.get(i));
@@ -175,7 +175,7 @@ public class NN2 {
 
     // STEP 3
     public void learn() {
-        weightLayers.forEach((wl) -> applyDeltasToWeights(wl));
+        weightLayers.forEach(this::applyDeltasToWeights);
     }
 
 
@@ -196,7 +196,9 @@ public class NN2 {
 
         for (double sourceValue : sourceValues) {
             for (int tv = 0; tv < targetValues.length; tv++) {
+
                 targetValues[tv] += sourceValue * weights[w++];
+
             }
         }
 
@@ -212,12 +214,17 @@ public class NN2 {
         double[] targetErrors = wl.targetNodeLayer.errors;
 
         int w = 0;
+        //w=weights.length-1;
+
         wl.sourceNodeLayer.clearErrors();
 
         for (int sv = 0; sv < sourceErrors.length; sv++) {
             for (double targetError : targetErrors) {
                 // NJD: commented out sourceDerivatives and binary classifier did not break...
-                sourceErrors[sv] += /* sourceDerivatives[sv] * */ weights[w++] * targetError;
+                sourceErrors[sv] +=  /*sourceDerivatives[sv] * */   weights[w++] * targetError;
+
+                // testing something - fix exploding gradients?
+                //sourceErrors[sv] += Math.tanh( weights[w++] * targetError );
             }
         }
 
@@ -247,21 +254,28 @@ public class NN2 {
             for (int tv = 0; tv < targetErrors.length; tv++) {
                 double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
                 delta *= targetDerivatives[tv];
+
                 deltas[w] += delta;
+                //deltas[w] = delta;
+
                 w++;
             }
         }
     }
+
+    public boolean isBad(double d) {
+        return Double.isNaN(d) || Double.isInfinite(d);
+    }
+
 
     // Adjust weights using deltas.
     private void applyDeltasToWeights(WeightLayer wl) {
         double[] weights = wl.weights;
         double[] deltas = wl.deltas;
 
-        int w = 0;
-
         for (int i = 0; i < weights.length; i++) {
             weights[i] += deltas[i];
+
         }
     }
 
@@ -282,6 +296,18 @@ public class NN2 {
             double e = nl.targets[i] - nl.values[i];
             nl.errors[i] = e;
         }
+
+        // Test addition of mean square error functionality.
+//        int num = nl.errors.length;
+//        double total = 0;
+//        for (int i=0;i<num;i++) {
+//            total += Math.abs(nl.errors[i]);
+//        }
+//        total/=(double) (num*num);
+//        if (Double.isInfinite(total) || Double.isNaN(total)) total=10000;
+//        for (int i=0;i<num;i++) {
+//            nl.errors[i]=total;
+//        }
     }
 
     private double sumLayerError(NodeLayer nl) {

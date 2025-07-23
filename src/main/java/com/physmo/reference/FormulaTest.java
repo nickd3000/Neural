@@ -1,8 +1,9 @@
-package com.physmo.neural.examples;
+package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
-import com.physmo.minvio.BasicGraph;
+
+import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.NN2Renderer;
 import com.physmo.neural.activations.ActivationType;
@@ -13,8 +14,8 @@ import java.awt.*;
 public class FormulaTest {
 
 
-    public static final double learningRate = 0.01;
-    public static final double dampenValue = 0.1; //0.0059;
+    public static final double learningRate = 0.001; //0.01;
+    public static final double dampenValue = 0.001; //0.0059;
 
     public static void main(String[] args) {
         testFormula();
@@ -29,9 +30,10 @@ public class FormulaTest {
         ActivationType att = ActivationType.TANH;
         NN2 net = new NN2()
                 .addLayer(1, att)
-                .addLayer(5, att)
+                .addLayer(15, att)
+                .addLayer(15, att)
                 .addLayer(1, att)
-                .randomizeWeights(-0.2, 0.2)
+                .randomizeWeights(-0.002, 0.002)
                 .inputMapping(1, 0)
                 .outputMapping(1, 0)
                 .learningRate(learningRate)
@@ -39,10 +41,10 @@ public class FormulaTest {
 
         NN2Renderer nn2renderer = new NN2Renderer(net, display, 330, 20, 300, 200);
 
-        display.startTimer();
+        //display.startTimer();
 
         for (int i = 0; i < 50000000; i++) {
-            for (int e = 0; e < 10; e++) {
+            for (int e = 0; e < 3; e++) {
 
                 double functionInput = Math.random() * 6.00;
                 double functionResult = function(functionInput);
@@ -51,12 +53,14 @@ public class FormulaTest {
                 net.setOutputTargetValue(0, functionResult);
                 net.feedForward();
                 net.backpropogate();
-            }
 
+            }
             net.learn();
 
-            if (display.getEllapsedTime() > 1000 / 30) {
-                display.startTimer();
+
+            if (i%1000==0) {
+            //if (display.getEllapsedTime() > 1000 / 30) {
+                //display.startTimer();
 
                 net.run(false);
                 display.cls(new Color(15, 41, 69));
