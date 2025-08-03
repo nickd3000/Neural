@@ -2,6 +2,7 @@ package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.neural.NodeLayer;
 import com.physmo.neural.activations.ActivationType;
 
@@ -21,24 +22,28 @@ public class ActivationVisualizer {
 
     public void run() {
         BasicDisplay bd = new BasicDisplayAwt(640, 400);
+        DrawingContext dc = bd.getDrawingContext();
+
         bd.setTitle("Activation functions");
-        bd.cls(colBackground);
+        bd.getDrawingContext().cls(colBackground);
 
-        renderActivationFunction(bd, ActivationType.LINEAR, 10, 10, 300, 100);
-        renderActivationFunction(bd, ActivationType.RELU, 10, 30 + 100, 300, 100);
-        renderActivationFunction(bd, ActivationType.SIGMOID, 10, 50 + 200, 300, 100);
+        renderActivationFunction(dc, ActivationType.LINEAR, 10, 10, 300, 100);
+        renderActivationFunction(dc, ActivationType.RELU, 10, 30 + 100, 300, 100);
+        renderActivationFunction(dc, ActivationType.SIGMOID, 10, 50 + 200, 300, 100);
 
-        renderActivationFunction(bd, ActivationType.SOFTMAX, 320, 10, 300, 100);
-        renderActivationFunction(bd, ActivationType.TANH, 320, 30 + 100, 300, 100);
-        renderActivationFunction(bd, ActivationType.NONE, 320, 50 + 200, 300, 100);
+        renderActivationFunction(dc, ActivationType.SOFTMAX, 320, 10, 300, 100);
+        renderActivationFunction(dc, ActivationType.TANH, 320, 30 + 100, 300, 100);
+        renderActivationFunction(dc, ActivationType.NONE, 320, 50 + 200, 300, 100);
+
+        bd.repaint();
     }
 
-    public void renderActivationFunction(BasicDisplay bd, ActivationType a, int x, int y, int w, int h) {
-        bd.setDrawColor(colBorder);
-        bd.drawRect(x, y,  w,  h);
-        bd.setDrawColor(colAxes);
-        bd.drawLine(x, y + h / 2, x + w, y + h / 2);
-        bd.drawLine(x + w / 2, y, x + w / 2, y + h);
+    public void renderActivationFunction(DrawingContext dc, ActivationType a, int x, int y, int w, int h) {
+        dc.setDrawColor(colBorder);
+        dc.drawRect(x, y,  w,  h);
+        dc.setDrawColor(colAxes);
+        dc.drawLine(x, y + h / 2, x + w, y + h / 2);
+        dc.drawLine(x + w / 2, y, x + w / 2, y + h);
 
         NodeLayer dummyLayer = new NodeLayer(1, 1);
 
@@ -56,17 +61,17 @@ public class ActivationVisualizer {
             a.getInstance().LayerDerivative(dummyLayer);
             act = clamp(dummyLayer.values[0], -1.5, 1.5);
             der = clamp(dummyLayer.derivatives[0], -1.5, 1.5);
-            bd.setDrawColor(colAct);
-            bd.drawFilledRect(
+            dc.setDrawColor(colAct);
+            dc.drawFilledRect(
                     (int) (x + (v1)),
                     (int) (y + (h / 2) - (act * heightScaler)), 2, 2);
-            bd.setDrawColor(colDer);
-            bd.drawFilledRect(
+            dc.setDrawColor(colDer);
+            dc.drawFilledRect(
                     (int) (x + (v1)),
                     (int) (y + (h / 2) - (der * heightScaler)), 2, 2);
         }
 
-        bd.repaint();
+
     }
 
     public double clamp(double val, double min, double max) {

@@ -11,7 +11,7 @@
         <dependency>
             <groupId>io.github.nickd3000</groupId>
             <artifactId>minvio</artifactId>
-            <version>1.04</version>
+            <version>1.10</version>
         </dependency>
     </dependencies>
 

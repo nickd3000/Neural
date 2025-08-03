@@ -3,6 +3,7 @@ package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.NN2Renderer;
@@ -24,7 +25,8 @@ public class TestBinaryClassifierNN2 {
     Color colMatrixMid = new Color(0x44476C);
     DataPoint[] data = new DataPoint[numPoints];
     NN2 net = null;
-    BasicDisplay display = new BasicDisplayAwt(800, 600);
+    BasicDisplay bd = new BasicDisplayAwt(800, 600);
+    DrawingContext dc = bd.getDrawingContext();
 
     public static void main(String[] args) {
         TestBinaryClassifierNN2 bc = new TestBinaryClassifierNN2();
@@ -49,11 +51,11 @@ public class TestBinaryClassifierNN2 {
                 .inputMapping(1, 0)
                 .outputMapping(1, 0);
 
-        nn2Renderer = new NN2Renderer(net, display, 430, 10, 350, 300);
+        nn2Renderer = new NN2Renderer(net, bd, 430, 10, 350, 300);
 
         BasicGraph graphError = new BasicGraph(2000);
 
-        display.setFont(12);
+        dc.setFont(12);
 
 //		net.buildNet("2 2 2 1");
 //		net.learningRate=0.00013;
@@ -107,10 +109,10 @@ public class TestBinaryClassifierNN2 {
             graphError.addData(error * 10.0);
 
             if (i % 10 == 0) {
-                display.cls(colBackground);
-                display.setDrawColor(Color.BLACK);
+                dc.cls(colBackground);
+                dc.setDrawColor(Color.BLACK);
 
-                graphError.draw(display, 10, 420, 400, 120, Color.yellow);
+                graphError.draw(bd, 10, 420, 400, 120, Color.yellow);
 
                 drawMatrix(10, 10, 200);
                 drawPoints(10, 10, 200);
@@ -118,12 +120,12 @@ public class TestBinaryClassifierNN2 {
                 //net.drawNetwork(display, 430, 10, 300, 300);
                 nn2Renderer.draw();
 
-                display.setDrawColor(Color.WHITE);
-                display.drawText("Iteration  " + i, 10, 560);
-                display.drawText("Error  " + error, 10, 580);
+                dc.setDrawColor(Color.WHITE);
+                dc.drawText("Iteration  " + i, 10, 560);
+                dc.drawText("Error  " + error, 10, 580);
                 //display.drawText("Learning rate  "+net.learningRate, 10, 585);
 
-                display.repaint(30);
+                bd.repaint(30);
             }
         }
     }
@@ -187,8 +189,8 @@ public class TestBinaryClassifierNN2 {
             if (v < 0.2) c = colDataPointOff;
             else if (v > 0.8) c = colDataPointOn;
             else c = Color.lightGray;
-            display.setDrawColor(c);
-            display.drawCircle(x + xo, y + yo, 5 / 2);
+            dc.setDrawColor(c);
+            dc.drawCircle(x + xo, y + yo, 5 / 2);
         }
     }
 
@@ -225,8 +227,8 @@ public class TestBinaryClassifierNN2 {
                 int dx = (int) ((x + 100) * drawScale);
                 int dy = (int) ((y + 100) * drawScale);
                 c = fuck(v);
-                display.setDrawColor(c);
-                display.drawFilledRect(dx + xo, dy + yo, (int) (step * drawScale), (int) (step * drawScale));
+                dc.setDrawColor(c);
+                dc.drawFilledRect(dx + xo, dy + yo, (int) (step * drawScale), (int) (step * drawScale));
             }
         }
     }

@@ -2,6 +2,7 @@ package com.physmo.reference;
 
 import com.physmo.minvio.BasicDisplay;
 import com.physmo.minvio.BasicDisplayAwt;
+import com.physmo.minvio.DrawingContext;
 import com.physmo.minvio.utils.BasicGraph;
 import com.physmo.neural.NN2;
 import com.physmo.neural.activations.ActivationType;
@@ -26,11 +27,12 @@ public class TestRecurrentNN2 {
     static int deltaCount = 1; // 1 number of learnings to combine for inertia
     static double randomAmount = 0.010;
     static int midLayerSize = 55; //200 ; // 50
-    static double learningRate = 0.001; // 0.01
+    static double learningRate = 0.1; // 0.01
     static double dampenValue = 0.000; // 0.6
     double learningError = 0;
     boolean dynamicLearningRate = false;
     BasicDisplay bd = null;
+    DrawingContext dc = null;
     BasicGraph scoreGraph = null;
 
     public static void main(String[] args) {
@@ -40,13 +42,14 @@ public class TestRecurrentNN2 {
 
     public void run() {
         bd = new BasicDisplayAwt(320, 240);
+        dc = bd.getDrawingContext();
         scoreGraph = new BasicGraph(100);
 
         //String book = loadTextFile("fox.txt");
-        String book = loadTextFile("sherlock.txt");
+        //String book = loadTextFile("sherlock.txt");
         //String book = loadTextFile("sphynx.txt");
         //String book = loadTextFile("abcd.txt");
-        //String book = loadTextFile("wiki.txt");
+        String book = loadTextFile("wiki.txt");
 
         if (book.length() > 0) System.out.println(book.substring(0, 200));
 
@@ -59,6 +62,7 @@ public class TestRecurrentNN2 {
 //                .addLayer(midLayerSize, ActivationType.RELU)
 //                .addLayer(midLayerSize, ActivationType.RELU)
 //                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.TANH)
                 .addLayer(midLayerSize, ActivationType.RELU)
                 .addLayer(charRange, ActivationType.LINEAR)
                 .randomizeWeights(-0.001, 0.01)
@@ -76,8 +80,8 @@ public class TestRecurrentNN2 {
 
         for (int m = 0; m < 80000; m++) {
 
-            for (int i = 0; i < 15; i++) {
-                learn(net, book, 10); //30 250); // 2
+            for (int i = 0; i < 1500; i++) {
+                learn(net, book, 20); //30 250); // 2
             }
 
 
@@ -91,9 +95,9 @@ public class TestRecurrentNN2 {
                 lastUpdate = System.currentTimeMillis();
                 generateOutput(net, 140);
 
-                bd.cls(Color.white);
+                dc.cls(Color.white);
                 scoreGraph.draw(bd, 10, 10, 300, 200, null);
-                bd.drawText("LR=" + learningRate, 20, 200);
+                dc.drawText("LR=" + learningRate, 20, 200);
                 bd.repaint();
             }
         }

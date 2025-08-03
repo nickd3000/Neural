@@ -53,7 +53,7 @@ public class TestNN2 {
 
             graph.addData(nn2.getCombinedError());
 
-            bd.cls(Color.white);
+            bd.getDrawingContext().cls(Color.white);
             graph.draw(bd, 1, 1, 400, 400, null);
 
             bd.repaint();

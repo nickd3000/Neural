@@ -26,9 +26,9 @@ public class NN2Renderer {
     public void draw() {
         int numLayers = nn2.nodeLayers.size();
 
-        bd.setDrawColor(colBg);
-        bd.drawFilledRect(dx, dy, dw, dh);
-        bd.setDrawColor(colNode);
+        bd.getDrawingContext().setDrawColor(colBg);
+        bd.getDrawingContext().drawFilledRect(dx, dy, dw, dh);
+        bd.getDrawingContext().setDrawColor(colNode);
 
         // Draw connections.
         for (int l = 0; l < numLayers - 1; l++) {
@@ -59,7 +59,7 @@ public class NN2Renderer {
 
     public void drawNode(int x, int y, double v) {
         double nodeSize = 5;
-        bd.drawFilledCircle(x - nodeSize / 2, y - nodeSize / 2, nodeSize);
+        bd.getDrawingContext().drawFilledCircle(x - nodeSize / 2, y - nodeSize / 2, nodeSize);
     }
 
     public void drawConnection(int x, int y, int x2, int y2, double v) {
@@ -70,9 +70,9 @@ public class NN2Renderer {
         if (iv > 0xff) iv = 0xff;
 
         Color c = new Color(iv, iv, iv);
-        bd.setDrawColor(c);
+        bd.getDrawingContext().setDrawColor(c);
 
-        bd.drawLine(x, y, x2, y2);
+        bd.getDrawingContext().drawLine(x, y, x2, y2);
     }
 
     public int[] getPosition(int layer, int index) {
