@@ -4,7 +4,7 @@ import com.physmo.neural.NodeLayer;
 
 class Relu implements Activation {
     double slope = 0.1;
-    double max = 1;
+    double max = 100;
 
     @Override
     public double Activate(Double value) {

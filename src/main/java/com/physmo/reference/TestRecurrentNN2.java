@@ -26,11 +26,11 @@ public class TestRecurrentNN2 {
     static double scaleMax = 0.95;
     static int deltaCount = 1; // 1 number of learnings to combine for inertia
     static double randomAmount = 0.010;
-    static int midLayerSize = 55; //200 ; // 50
-    static double learningRate = 0.1; // 0.01
-    static double dampenValue = 0.000; // 0.6
+    static int midLayerSize = 64; //200 ; // 50
+    static double learningRate = 0.015; // 0.01
+    static double dampenValue = 0.9;//.9; // 0.6
     double learningError = 0;
-    boolean dynamicLearningRate = false;
+    boolean dynamicLearningRate = true;
     BasicDisplay bd = null;
     DrawingContext dc = null;
     BasicGraph scoreGraph = null;
@@ -56,16 +56,14 @@ public class TestRecurrentNN2 {
 
         NN2 net = new NN2()
                 .addLayer(charRange + midLayerSize + 2, ActivationType.TANH)
-//                .addLayer(midLayerSize, ActivationType.TANH)
-//                .addLayer(midLayerSize/3, ActivationType.TANH)
-//                .addLayer(midLayerSize/3, ActivationType.TANH)
-//                .addLayer(midLayerSize, ActivationType.RELU)
-//                .addLayer(midLayerSize, ActivationType.RELU)
-//                .addLayer(midLayerSize, ActivationType.TANH)
                 .addLayer(midLayerSize, ActivationType.TANH)
-                .addLayer(midLayerSize, ActivationType.RELU)
-                .addLayer(charRange, ActivationType.LINEAR)
-                .randomizeWeights(-0.001, 0.01)
+                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(midLayerSize, ActivationType.TANH)
+                .addLayer(charRange, ActivationType.SOFTMAX)
+                .xavierWeights()
                 .learningRate(learningRate)
                 .dampenValue(dampenValue);
 
@@ -80,13 +78,13 @@ public class TestRecurrentNN2 {
 
         for (int m = 0; m < 80000; m++) {
 
-            for (int i = 0; i < 1500; i++) {
+            for (int i = 0; i < 50; i++) {
                 learn(net, book, 20); //30 250); // 2
             }
 
 
             if (dynamicLearningRate && m % 100 == 0) {
-                learningRate *= 0.97;
+                learningRate *= 0.99;
                 net.learningRate(learningRate);
             }
 
@@ -112,6 +110,8 @@ public class TestRecurrentNN2 {
         charPos = (int) (Math.random() * (double) (corpus.length() - batchSize));
         learningError = 0;
 
+        //net.clearIntermediateValues();
+
         for (int i = 0; i < batchSize; i++) {
             inChar = corpus.charAt(charPos);
             outChar = corpus.charAt(charPos + 1);
@@ -119,7 +119,7 @@ public class TestRecurrentNN2 {
             setInputFromChar(net, inChar);
             setExpectedOutputFromChar(net, outChar);
 
-            copyInnerLayerToInput(net, midLayerSize, charRange, i == 0);
+            copyInnerLayerToInput2(net, midLayerSize, charRange, i == 0);
 
             net.feedForward();
 
@@ -128,30 +128,44 @@ public class TestRecurrentNN2 {
             learningError += net.getCombinedError();
 
             charPos++;
-            net.learn();
+
+            // Only learn every N steps, not every character
+            if (i % 10 == 0 || i == batchSize - 1) {
+                net.learn();
+            }
+
         }
 
 
     }
 
     public void generateOutput(NN2 net, int size) {
-        char prevChar = GENERATION_SEED_CHAR;
-        prevChar = (char) ('a' + (char) (Math.random() * 20));
+        // Prime with a short, common sequence to build state before sampling
+        String primer = " the ";
+        char prevChar = primer.charAt(primer.length() - 1);
 
         System.out.println("Sample output:");
 
+        // Feed primer without printing it (except last char becomes the starting prevChar)
+        for (int i = 0; i < primer.length(); i++) {
+            char c = primer.charAt(i);
+            setInputFromChar(net, c);
+            copyInnerLayerToInput2(net, midLayerSize, charRange, i == 0);
+            net.feedForward();
+        }
+
+        // Now generate and print
         for (int i = 0; i < size; i++) {
             System.out.print(prevChar);
 
             setInputFromChar(net, prevChar);
-
-            copyInnerLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
-            //copyOutputLayerToInput(net, midLayerSize, charRange, i == 0 ? true : false);
-            //net.run(false);
+            copyInnerLayerToInput2(net, midLayerSize, charRange, false);
             net.feedForward();
 
-            prevChar = getOutputCharWeighted(net);
-
+            // Sample from the current softmax distribution (with temperature)
+            prevChar = getOutputCharWithTemperature(net, 0.5);
+            // Alternatively, greedy:
+            // prevChar = getOutputCharMax(net);
         }
         System.out.print("\n " + learningError + " ");
 
@@ -175,6 +189,24 @@ public class TestRecurrentNN2 {
             net.setInputValue(i + inputNodeOffset, val); //, scaleMin,scaleMax);
         }
     }
+
+    // with scaling to prevent runaway feedback
+    public void copyInnerLayerToInput2(NN2 net, int numInnerNodes, int inputNodeOffset, boolean clear) {
+        if (skipCopy) return;
+
+        int innerLayerIndex = 2;
+        for (int i = 0; i < numInnerNodes; i++) {
+            double val = net.getInnerValue(innerLayerIndex, i);
+            if (clear) val = 0;
+
+            // Scale the recurrent connection
+            val *= 0.15; // or even smaller like 0.1
+            val = Math.tanh(val); // Bound the values
+
+            net.setInputValue(i + inputNodeOffset, val);
+        }
+    }
+
 
     public void copyOutputLayerToInput(NN2 net, int numInnerNodes, int inputNodeOffset, boolean clear) {
         //mergeOutputToInput(net);
@@ -211,7 +243,7 @@ public class TestRecurrentNN2 {
 
     public char mapIntToChar(int i) {
         if (i < 0) i = 0;
-        if (i > charRange) i = charRange;
+        if (i >= charRange) i = charRange - 1;
         i += 32;
 
         return (char) (i);
@@ -225,36 +257,84 @@ public class TestRecurrentNN2 {
 
     // version with roulette style weighted selection.
     public char getOutputCharWeighted(NN2 net) {
-
-        int maxId = 0;
-        double total = 0;
-        double val = 0;
-        double softMax = 0;
-
-        // Calculate total of all outputs.
+        // Softmax outputs already represent a probability distribution (sum ≈ 1)
+        // Sample directly from them rather than using abs/transform.
+        double[] probs = new double[charRange];
+        double sum = 0.0;
         for (int i = 0; i < charRange; i++) {
-            val = Math.abs(net.getOutputValue(i));
-            total += transformWeightedValue(val);;
+            double p = net.getOutputValue(i);
+            if (p < 0) p = 0; // safety clamp
+            probs[i] = p;
+            sum += p;
+        }
+        if (sum <= 0.0 || Double.isNaN(sum)) {
+            return getOutputCharMax(net);
+        }
+        // Normalize in case of drift
+        for (int i = 0; i < charRange; i++) probs[i] /= sum;
+
+        double pick = Math.random();
+        double cumulative = 0.0;
+        for (int i = 0; i < charRange; i++) {
+            cumulative += probs[i];
+            if (pick <= cumulative) {
+                return (char) mapIntToChar(i);
+            }
+        }
+        return (char) mapIntToChar(charRange - 1);
+    }
+
+    public char getOutputCharWithTemperature(NN2 net, double temperature) {
+        // Apply temperature to probabilities: p_i^(1/T) / sum_j p_j^(1/T)
+        if (temperature <= 0.0 || Double.isNaN(temperature)) {
+            return getOutputCharMax(net);
         }
 
-        double pick = Math.random() * total;
+        double invT = 1.0 / temperature;
+        double[] scaled = new double[charRange];
+        double sum = 0.0;
 
-        double runningTotal = 0, previousRunningTotal = 0;
         for (int i = 0; i < charRange; i++) {
-            val = Math.abs(net.getOutputValue(i));
+            double p = net.getOutputValue(i); // softmax probability
+            if (p < 0) p = 0;                 // clamp negatives
+            double v = Math.pow(p, invT);     // temperature scaling on probs
+            if (Double.isNaN(v) || Double.isInfinite(v)) v = 0.0;
+            scaled[i] = v;
+            sum += v;
+        }
 
-            runningTotal += transformWeightedValue(val);;
+        if (sum <= 0.0 || Double.isNaN(sum) || Double.isInfinite(sum)) {
+            return getOutputCharMax(net);
+        }
 
-            if (val > 0 && pick > previousRunningTotal &&
-                    pick <= runningTotal) {
-                maxId = i;
-                break;
+        for (int i = 0; i < charRange; i++) {
+            scaled[i] /= sum;
+        }
+
+        double pick = Math.random();
+        double cumulative = 0.0;
+        for (int i = 0; i < charRange; i++) {
+            cumulative += scaled[i];
+            if (pick <= cumulative) {
+                return (char) mapIntToChar(i);
             }
+        }
+        return (char) mapIntToChar(charRange - 1);
+    }
 
-            previousRunningTotal = runningTotal;
+    public char getOutputCharMax(NN2 net) {
+        double maxVal = Double.NEGATIVE_INFINITY;
+        int maxId = 0;
+        for (int i = 0; i < charRange; i++) {
+            double val = net.getOutputValue(i);
+            if (val > maxVal) {
+                maxVal = val;
+                maxId = i;
+            }
         }
         return (char) mapIntToChar(maxId);
     }
+
 
     public void setInputFromChar(NN2 net, char c) {
         int ic = mapCharToInt(c);
@@ -262,19 +342,16 @@ public class TestRecurrentNN2 {
             if (i == ic) {
                 net.setInputValue(i, scaleMax); //, scaleMin, scaleMax);
             } else {
-                net.setInputValue(i, 0.1);//, scaleMin, scaleMax);
+                net.setInputValue(i, 0.0);//, scaleMin, scaleMax);
             }
         }
     }
 
     public void setExpectedOutputFromChar(NN2 net, char c) {
+        // One-hot targets for softmax: 1.0 at the true class, 0.0 elsewhere
         int ic = mapCharToInt(c);
         for (int i = 0; i < charRange; i++) {
-            if (i == ic) {
-                net.setOutputTargetValue(i, scaleMax);
-            } else {
-                net.setOutputTargetValue(i, 0);
-            }
+            net.setOutputTargetValue(i, i == ic ? 1.0 : 0.0);
         }
     }
 
@@ -289,7 +366,7 @@ public class TestRecurrentNN2 {
         int i = (int) c;
         i = i - 32;
         if (i < 0) i = 0;
-        if (i >= charRange) i = charRange;
+        if (i >= charRange) i = charRange - 1;
 
         return i;
     }

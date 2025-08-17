@@ -63,6 +63,20 @@ public class NN2 {
         return this;
     }
 
+    public NN2 xavierWeights() {
+        for (WeightLayer wl : weightLayers) {
+            int fanIn = wl.sourceNodeLayer.size;
+            int fanOut = wl.targetNodeLayer.size;
+            double limit = Math.sqrt(2.0 / fanIn); // He initialization for ReLU
+
+            for (int i = 0; i < wl.weights.length; i++) {
+                wl.weights[i] = (Math.random() * 2 * limit) - limit;
+            }
+        }
+        return this;
+    }
+
+
     public NN2 learningRate(double value) {
         this.learningRate = value;
         return this;
@@ -178,6 +192,11 @@ public class NN2 {
         weightLayers.forEach(this::applyDeltasToWeights);
     }
 
+    public void clearIntermediateValues() {
+        for (NodeLayer nl : nodeLayers) {
+            nl.clearValues();
+        }
+    }
 
     public double getCombinedError() {
         return combinedError;
@@ -198,6 +217,10 @@ public class NN2 {
             for (int tv = 0; tv < targetValues.length; tv++) {
 
                 targetValues[tv] += sourceValue * weights[w++];
+
+                if (isBad(targetValues[tv])) {
+                    System.out.println("Bad target value: " + targetValues[tv]);
+                }
 
             }
         }
@@ -220,6 +243,11 @@ public class NN2 {
 
         for (int sv = 0; sv < sourceErrors.length; sv++) {
             for (double targetError : targetErrors) {
+
+                if (isBad(targetError)) {
+                    System.out.println("Bad target error: " + targetError);
+                }
+
                 // NJD: commented out sourceDerivatives and binary classifier did not break...
                 sourceErrors[sv] +=  /*sourceDerivatives[sv] * */   weights[w++] * targetError;
 
@@ -234,7 +262,9 @@ public class NN2 {
         double[] deltas = wl.deltas;
 
         for (int d = 0; d < deltas.length; d++) {
-
+//            if (isBad(deltas[d])) {
+//                System.out.println("Bad delta: " + deltas[d]);
+//            }
             deltas[d] *= multiplier;
 
         }
@@ -253,10 +283,25 @@ public class NN2 {
         for (int sv = 0; sv < sourceErrors.length; sv++) {
             for (int tv = 0; tv < targetErrors.length; tv++) {
                 double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
+
+                if (isBad(targetDerivatives[tv])) {
+                    System.out.println("Bad target derivative: " + targetDerivatives[tv]);
+                }
+
                 delta *= targetDerivatives[tv];
+
+                delta = Math.max(-1.0, Math.min(1.0, delta)); // Clip to [-1, 1]
+
+                if (isBad(delta)) {
+                    System.out.println("Bad delta: " + delta);
+                }
 
                 deltas[w] += delta;
                 //deltas[w] = delta;
+
+                if (delta>100000) {
+                    System.out.println("Delta too large: " + delta);
+                }
 
                 w++;
             }
@@ -293,8 +338,26 @@ public class NN2 {
     // derivatives are required before this is executed.
     private void calculateLayerErrors(NodeLayer nl) {
         for (int i = 0; i < nl.values.length; i++) {
+
+            if (isBad(nl.targets[i])) {
+                System.out.println("Bad target: " + nl.targets[i]);
+            }
+            if (isBad(nl.values[i])) {
+                System.out.println("Bad values: " + nl.values[i]);
+            }
+
             double e = nl.targets[i] - nl.values[i];
+
+            if (e>100) {
+                e=100;
+                System.out.println("Error too large: " + e);
+            }
+
             nl.errors[i] = e;
+
+            if (isBad(e)) {
+                System.out.println("Bad error: " + e);
+            }
         }
 
         // Test addition of mean square error functionality.

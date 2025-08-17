@@ -21,19 +21,24 @@ public class ActivationVisualizer {
     }
 
     public void run() {
-        BasicDisplay bd = new BasicDisplayAwt(640, 400);
+        BasicDisplay bd = new BasicDisplayAwt(800, 600);
         DrawingContext dc = bd.getDrawingContext();
 
         bd.setTitle("Activation functions");
         bd.getDrawingContext().cls(colBackground);
 
-        renderActivationFunction(dc, ActivationType.LINEAR, 10, 10, 300, 100);
-        renderActivationFunction(dc, ActivationType.RELU, 10, 30 + 100, 300, 100);
-        renderActivationFunction(dc, ActivationType.SIGMOID, 10, 50 + 200, 300, 100);
+        int padding = 10;
+        int padding2 = padding*2;
+        int panelWidth = (bd.getWidth()/2) - (padding * 2);
+        int panelHeight = (bd.getHeight()/3) - (padding * 2);
 
-        renderActivationFunction(dc, ActivationType.SOFTMAX, 320, 10, 300, 100);
-        renderActivationFunction(dc, ActivationType.TANH, 320, 30 + 100, 300, 100);
-        renderActivationFunction(dc, ActivationType.NONE, 320, 50 + 200, 300, 100);
+        renderActivationFunction(dc, ActivationType.LINEAR, padding, padding, panelWidth, panelHeight);
+        renderActivationFunction(dc, ActivationType.RELU, padding, (padding2+panelHeight), panelWidth, panelHeight);
+        renderActivationFunction(dc, ActivationType.SIGMOID, padding, (padding2+panelHeight)*2, panelWidth, panelHeight);
+
+        renderActivationFunction(dc, ActivationType.SOFTMAX, padding2+panelWidth, padding, panelWidth, panelHeight);
+        renderActivationFunction(dc, ActivationType.TANH, padding2+panelWidth, (padding2+panelHeight), panelWidth, panelHeight);
+        renderActivationFunction(dc, ActivationType.NONE, padding2+panelWidth, (padding2+panelHeight)*2, panelWidth, panelHeight);
 
         bd.repaint();
     }
@@ -52,10 +57,10 @@ public class ActivationVisualizer {
         double act = 0;
         double der = 0;
         double widthScaler = w;
-        double heightScaler = h / 3;
+        double heightScaler = h / 3.0;
 
         for (int v1 = 0; v1 < w; v1++) {
-            v = (((double) v1 - (w / 2)) / (double) w) * 8.0;
+            v = (((double) v1 - (w / 2.0)) / (double) w) * 8.0;
             dummyLayer.values[0] = v;
             a.getInstance().LayerActivation(dummyLayer);
             a.getInstance().LayerDerivative(dummyLayer);
@@ -64,14 +69,15 @@ public class ActivationVisualizer {
             dc.setDrawColor(colAct);
             dc.drawFilledRect(
                     (int) (x + (v1)),
-                    (int) (y + (h / 2) - (act * heightScaler)), 2, 2);
+                    (int) (y + (h / 2.0) - (act * heightScaler)), 2, 2);
             dc.setDrawColor(colDer);
             dc.drawFilledRect(
                     (int) (x + (v1)),
-                    (int) (y + (h / 2) - (der * heightScaler)), 2, 2);
+                    (int) (y + (h / 2.0) - (der * heightScaler)), 2, 2);
         }
 
 
+        dc.drawText(a.name(), x + 10, y + 20);
     }
 
     public double clamp(double val, double min, double max) {
