@@ -19,6 +19,10 @@ public class NN2 {
     private double outputScale = 1;
     private double outputShift = 0;
     private double combinedError = 0;
+    // Momentum coefficient: velocity v = beta * v + grad; weights += lr * v
+    private double momentum = 0.9;
+    // Optional absolute gradient clip applied before accumulating into momentum (null = disabled)
+    private Double gradClipAbs = null;
 
     public NN2() {
 
@@ -82,8 +86,31 @@ public class NN2 {
         return this;
     }
 
+    /**
+     * Sets the dampening (momentum) coefficient used to decay the per‑weight velocity.
+     * Interpreted as the classical momentum parameter beta in [0, 1):
+     * - Higher values (e.g., 0.9–0.99) retain more past velocity, yielding smoother and potentially faster convergence,
+     *   but can overshoot and may require a smaller learning rate.
+     * - Lower values (e.g., 0.0–0.5) forget history faster, making updates more responsive but noisier.
+     * Use 0.0 for no momentum. This method is kept for backward compatibility and also forwards to momentum(value).
+     *
+     * @param value momentum coefficient (beta), typically around 0.9
+     * @return this instance for chaining
+     */
     public NN2 dampenValue(double value) {
         this.dampenValue = value;
+        // Keep backwards compatibility: map to momentum semantics
+        this.momentum = value;
+        return this;
+    }
+
+    public NN2 momentum(double beta) {
+        this.momentum = beta;
+        return this;
+    }
+
+    public NN2 gradientClipAbs(double clipAbs) {
+        this.gradClipAbs = clipAbs;
         return this;
     }
 
@@ -111,7 +138,8 @@ public class NN2 {
     }
 
     public void setOutputTargetValue(int i, double v) {
-        getLastNodeLayer().targets[i] = mapValue(v, inputScale, inputShift);
+        // Use output mapping for targets, not input mapping
+        getLastNodeLayer().targets[i] = mapValue(v, outputScale, outputShift);
     }
 
     public double getOutputValue(int i) {
@@ -147,13 +175,14 @@ public class NN2 {
     }
 
     public void run(boolean learn) {
-        feedForward();
-
-        backpropogate();
-
-        if (learn) {
-            learn();
+        if (!learn) {
+            // Inference-only: do not touch deltas or weights
+            feedForward();
+            return;
         }
+        feedForward();
+        backpropogate();
+        learn();
     }
 
 
@@ -177,12 +206,24 @@ public class NN2 {
     // STEP 2
     // Back propagate and calculate deltas.
     public void backpropogate() {
+        // Convert output errors into deltas in-place: delta = error * f'(z)
+        NodeLayer out = getLastNodeLayer();
+        int outBiasIdx = out.size - 1;
+        for (int i = 0; i < outBiasIdx; i++) {
+            out.errors[i] *= out.derivatives[i];
+        }
+        // Ensure bias error/delta is zero
+        if (out.errors.length > 0) out.errors[outBiasIdx] = 0.0;
+
+        // Backpropagate deltas through all weight layers
         for (int i = weightLayers.size() - 1; i >= 0; i--) {
             backPropogateLayerPair(weightLayers.get(i));
         }
 
+        // Classical momentum on per-weight "velocity" stored in wl.deltas:
+        // v = beta * v + grad
         for (WeightLayer wl : weightLayers) {
-            dampenDeltas(wl, dampenValue);
+            dampenDeltas(wl, momentum);
             updateDeltas(wl);
         }
     }
@@ -231,80 +272,75 @@ public class NN2 {
     private void backPropogateLayerPair(WeightLayer wl) {
 
         double[] weights = wl.weights;
-        double[] sourceErrors = wl.sourceNodeLayer.errors;
-        double[] sourceValues = wl.sourceNodeLayer.values;
+        double[] sourceErrors = wl.sourceNodeLayer.errors;          // will become source deltas after multiplying by source derivatives
         double[] sourceDerivatives = wl.sourceNodeLayer.derivatives;
-        double[] targetErrors = wl.targetNodeLayer.errors;
+        double[] targetDeltas = wl.targetNodeLayer.errors;          // already multiplied by target derivatives
+        int sourceSize = wl.sourceNodeLayer.size;
+        int targetSize = wl.targetNodeLayer.size;
+
+        // Exclude bias neuron of target from propagation
+        int targetActive = targetSize - 1;
+        int sourceActive = sourceSize - 1;
 
         int w = 0;
-        //w=weights.length-1;
 
         wl.sourceNodeLayer.clearErrors();
 
-        for (int sv = 0; sv < sourceErrors.length; sv++) {
-            for (double targetError : targetErrors) {
-
-                if (isBad(targetError)) {
-                    System.out.println("Bad target error: " + targetError);
-                }
-
-                // NJD: commented out sourceDerivatives and binary classifier did not break...
-                sourceErrors[sv] +=  /*sourceDerivatives[sv] * */   weights[w++] * targetError;
-
-                // testing something - fix exploding gradients?
-                //sourceErrors[sv] += Math.tanh( weights[w++] * targetError );
+        // sourceErrors = W * targetDeltas (excluding target bias)
+        for (int sv = 0; sv < sourceSize; sv++) {
+            double acc = 0.0;
+            for (int tv = 0; tv < targetActive; tv++) {
+                acc += weights[w++] * targetDeltas[tv];
             }
+            // Skip the bias weight column into target bias node (we maintain a dense matrix; advance w over it)
+            w += 1; // advance over weight into target bias for this source neuron
+            sourceErrors[sv] += acc;
         }
 
+        // Convert source errors into source deltas for the next iteration
+        for (int sv = 0; sv < sourceActive; sv++) {
+            sourceErrors[sv] *= sourceDerivatives[sv];
+        }
+        // Bias delta is zero
+        sourceErrors[sourceActive] = 0.0;
     }
 
     private void dampenDeltas(WeightLayer wl, double multiplier) {
         double[] deltas = wl.deltas;
 
         for (int d = 0; d < deltas.length; d++) {
-//            if (isBad(deltas[d])) {
-//                System.out.println("Bad delta: " + deltas[d]);
-//            }
             deltas[d] *= multiplier;
-
         }
     }
 
-    // Add error to delta value.
+    // Accumulate raw gradient into velocity (stored in wl.deltas).
+    // After dampenDeltas() we add current grad: v = beta*v + grad.
     private void updateDeltas(WeightLayer wl) {
-        double[] deltas = wl.deltas;
-        double[] sourceErrors = wl.sourceNodeLayer.errors;
-        double[] targetErrors = wl.targetNodeLayer.errors;
-        double[] targetDerivatives = wl.targetNodeLayer.derivatives;
+        double[] deltas = wl.deltas;                    // serves as velocity v
         double[] sourceValues = wl.sourceNodeLayer.values;
+        double[] targetDeltas = wl.targetNodeLayer.errors; // already includes activation derivative
+        int sourceSize = wl.sourceNodeLayer.size;
+        int targetSize = wl.targetNodeLayer.size;
+        int targetActive = targetSize - 1; // exclude target bias from weight updates
 
         int w = 0;
 
-        for (int sv = 0; sv < sourceErrors.length; sv++) {
-            for (int tv = 0; tv < targetErrors.length; tv++) {
-                double delta = targetErrors[tv] * sourceValues[sv] * learningRate;
+        for (int sv = 0; sv < sourceSize; sv++) {
+            for (int tv = 0; tv < targetActive; tv++) {
+                double grad = targetDeltas[tv] * sourceValues[sv]; // raw gradient dL/dw
 
-                if (isBad(targetDerivatives[tv])) {
-                    System.out.println("Bad target derivative: " + targetDerivatives[tv]);
+                // Optional per-element gradient clipping before adding to momentum
+                if (gradClipAbs != null) {
+                    double cap = gradClipAbs.doubleValue();
+                    if (grad > cap) grad = cap;
+                    else if (grad < -cap) grad = -cap;
                 }
 
-                delta *= targetDerivatives[tv];
-
-                delta = Math.max(-1.0, Math.min(1.0, delta)); // Clip to [-1, 1]
-
-                if (isBad(delta)) {
-                    System.out.println("Bad delta: " + delta);
-                }
-
-                deltas[w] += delta;
-                //deltas[w] = delta;
-
-                if (delta>100000) {
-                    System.out.println("Delta too large: " + delta);
-                }
-
+                deltas[w] += grad; // v = beta*v + grad
                 w++;
             }
+            // Skip the weight into target bias (do not update it)
+            w++;
         }
     }
 
@@ -313,14 +349,13 @@ public class NN2 {
     }
 
 
-    // Adjust weights using deltas.
+    // Adjust weights using velocity and learning rate: w += lr * v
     private void applyDeltasToWeights(WeightLayer wl) {
         double[] weights = wl.weights;
-        double[] deltas = wl.deltas;
+        double[] deltas = wl.deltas; // velocity v
 
         for (int i = 0; i < weights.length; i++) {
-            weights[i] += deltas[i];
-
+            weights[i] += learningRate * deltas[i];
         }
     }
 
@@ -337,7 +372,8 @@ public class NN2 {
 
     // derivatives are required before this is executed.
     private void calculateLayerErrors(NodeLayer nl) {
-        for (int i = 0; i < nl.values.length; i++) {
+        int biasIdx = nl.size - 1;
+        for (int i = 0; i < biasIdx; i++) {
 
             if (isBad(nl.targets[i])) {
                 System.out.println("Bad target: " + nl.targets[i]);
@@ -348,8 +384,8 @@ public class NN2 {
 
             double e = nl.targets[i] - nl.values[i];
 
-            if (e>100) {
-                e=100;
+            if (e > 100) {
+                e = 100;
                 System.out.println("Error too large: " + e);
             }
 
@@ -359,23 +395,14 @@ public class NN2 {
                 System.out.println("Bad error: " + e);
             }
         }
-
-        // Test addition of mean square error functionality.
-//        int num = nl.errors.length;
-//        double total = 0;
-//        for (int i=0;i<num;i++) {
-//            total += Math.abs(nl.errors[i]);
-//        }
-//        total/=(double) (num*num);
-//        if (Double.isInfinite(total) || Double.isNaN(total)) total=10000;
-//        for (int i=0;i<num;i++) {
-//            nl.errors[i]=total;
-//        }
+        // No error/target for bias neuron
+        nl.errors[biasIdx] = 0.0;
     }
 
     private double sumLayerError(NodeLayer nl) {
         double sum = 0;
-        for (int i = 0; i < nl.values.length; i++) {
+        int biasIdx = nl.size - 1;
+        for (int i = 0; i < biasIdx; i++) {
             sum += Math.abs(nl.errors[i]);
         }
         return sum;
@@ -391,7 +418,9 @@ public class NN2 {
     }
 
     private double unmapValue(double val, double scale, double shift) {
-        return (val / scale) + shift;
+        // Correct inverse of mapValue(val) = val * scale + shift
+        if (scale == 0.0) return val; // avoid division by zero; alternatively throw
+        return (val - shift) / scale;
     }
 
     public void setWeightsFromArray(double [] weights) {
@@ -409,5 +438,14 @@ public class NN2 {
             count += wl.size;
         }
         return count;
+    }
+
+    // Resets momentum/velocity (useful between runs or when changing lr/momentum)
+    public void clearDeltas() {
+        for (WeightLayer wl : weightLayers) {
+            for (int i = 0; i < wl.deltas.length; i++) {
+                wl.deltas[i] = 0.0;
+            }
+        }
     }
 }

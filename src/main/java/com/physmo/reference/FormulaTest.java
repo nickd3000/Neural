@@ -16,7 +16,7 @@ public class FormulaTest {
 
 
     public static final double learningRate = 0.001; //0.01;
-    public static final double dampenValue = 0.01; //0.0059;
+    public static final double dampenValue = 0.31; //0.0059;
 
     public static void main(String[] args) {
         testFormula();
@@ -32,14 +32,8 @@ public class FormulaTest {
         ActivationType att = ActivationType.TANH;
         NN2 net = new NN2()
                 .addLayer(1, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
-                .addLayer(5, att)
+                .addLayer(8, att)
+                .addLayer(8, att)
                 .addLayer(1, att)
                 .randomizeWeights(-0.2, 0.2)
                 .inputMapping(1, 0)

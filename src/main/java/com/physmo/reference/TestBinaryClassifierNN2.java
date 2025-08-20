@@ -13,8 +13,8 @@ import java.awt.*;
 
 public class TestBinaryClassifierNN2 {
 
-    public static final double learningRate = 0.001;
-    public static final double dampenValue = 0.599;
+    public static final double learningRate = 0.0001;
+    public static final double dampenValue = 0.89;
     static int numPoints = 500;
     NN2Renderer nn2Renderer = null;
     Color colBackground = new Color(0x31333E);
@@ -41,13 +41,14 @@ public class TestBinaryClassifierNN2 {
                 .addLayer(2, activationType)
                 //.addLayer(30, actType)
                 //.addLayer(50, actType)
-                .addLayer(10, activationType)
-                .addLayer(10, activationType)
-                .addLayer(10, activationType)
+                .addLayer(5, activationType)
+                .addLayer(5, activationType)
+                .addLayer(5, activationType)
                 .addLayer(1, activationType)
                 .learningRate(learningRate)
                 .dampenValue(dampenValue)
-                .randomizeWeights(-0.1, 0.1)
+                //.randomizeWeights(-0.1, 0.1)
+                .xavierWeights()
                 .inputMapping(1, 0)
                 .outputMapping(1, 0);
 
@@ -60,7 +61,7 @@ public class TestBinaryClassifierNN2 {
 //		net.buildNet("2 2 2 1");
 //		net.learningRate=0.00013;
 //		net.momentum=0.45;
-        initData(Shape.BLOBS);
+        initData(Shape.RINGS);
         int batch = 0;
         int batchSize = 50;
 
